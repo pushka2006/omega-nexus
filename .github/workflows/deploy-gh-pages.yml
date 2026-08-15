@@ -29,18 +29,19 @@ jobs:
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install Frontend Dependencies
         working-directory: ./frontend
-        run: npm install --legacy-peer-deps
+        run: npm install --legacy-peer-deps --no-audit --prefer-offline
 
       - name: Build Static Demo Bundle
         working-directory: ./frontend
         env:
-          PUBLIC_URL: /omega-nexus
+          NODE_OPTIONS: "--max-old-space-size=4096"
+          GENERATE_SOURCEMAP: "false"
           REACT_APP_BACKEND_URL: https://omega-nexus-backend.onrender.com
-          CI: false
+          CI: "false"
         run: npm run build
 
       - name: Prepare SPA Routing & Disable Jekyll
