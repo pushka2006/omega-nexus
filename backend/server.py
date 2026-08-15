@@ -2877,7 +2877,7 @@ print(f"Token Verification Status: {{sec.verify_token(t)}}")
 import stripe
 from typing import Dict, Any
 
-stripe.api_key = "sk_live_omega_nexus_key"
+stripe.api_key = os.environ.get("STRIPE_SECRET_KEY", "")
 
 def process_subscription_event(event_payload: Dict[str, Any]) -> Dict[str, Any]:
     event_type = event_payload.get("type")

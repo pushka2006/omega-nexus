@@ -1797,7 +1797,7 @@ export default function ProjectsHub() {
                 type="password"
                 value={ghTokenInput}
                 onChange={e => setGhTokenInput(e.target.value)}
-                placeholder="ghp_xxxxxxxxxxxxxxxxxxxx (Paste token for automatic git push)"
+                placeholder="Paste your GitHub personal access token (e.g. ghp_...)"
                 style={{ width: "100%", padding: "10px 14px", borderRadius: 8, background: "#030712", border: "1px solid rgba(168,85,247,0.4)", color: "#fff", fontSize: 12, fontFamily: "monospace" }}
               />
               <div style={{ fontSize: 10, color: "rgba(148,163,184,0.7)", fontFamily: "monospace", marginTop: 8, lineHeight: 1.5 }}>
