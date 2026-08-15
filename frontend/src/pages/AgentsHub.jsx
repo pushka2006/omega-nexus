@@ -630,7 +630,7 @@ function WebsiteBuilderTrainingPanel({ externalSelectedAgent, onSelectAgent }) {
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 <div style={{ padding: 14, borderRadius: 10, background: "rgba(0,255,136,0.1)", border: "1px solid #00FF88", color: "#00FF88" }}>
-                  <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>🎉 Web Application Deployed Successfully!</div>
+                  <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>🎉 Web Application Researched & Deployed Live!</div>
                   <div style={{ fontSize: 11, fontFamily: "monospace" }}>Project: <strong>{generatedResult.project?.name || generatedResult.project_name || "Custom Web Application"}</strong> | Status: 200 OK Live</div>
                   <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
                     <a href={generatedResult.deployment_url || generatedResult.live_url || `http://localhost:8000/deployed/${generatedResult.slug}/`} target="_blank" rel="noreferrer"
@@ -643,6 +643,23 @@ function WebsiteBuilderTrainingPanel({ externalSelectedAgent, onSelectAgent }) {
                     </a>
                   </div>
                 </div>
+
+                {/* AUTONOMOUS WEB RESEARCH FINDINGS */}
+                {generatedResult.extracted_features && generatedResult.extracted_features.length > 0 && (
+                  <div style={{ padding: 12, borderRadius: 10, background: "rgba(15,23,42,0.8)", border: "1px solid rgba(0,245,255,0.25)" }}>
+                    <div style={{ fontSize: 10.5, fontWeight: 800, color: "#00F5FF", fontFamily: "monospace", marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                      <span>🌐</span> AUTONOMOUS WEB RESEARCH & ADVANCED FEATURES SYNTHESIZED:
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                      {generatedResult.extracted_features.map((feat, fidx) => (
+                        <div key={fidx} style={{ padding: "8px 10px", borderRadius: 6, background: "rgba(6,13,34,0.8)", border: "1px solid rgba(255,255,255,0.06)", fontSize: 11 }}>
+                          <div style={{ fontWeight: 700, color: "#f8fafc", marginBottom: 2 }}>{feat.title}</div>
+                          <div style={{ color: "rgba(148,163,184,0.8)", fontSize: 10, fontFamily: "monospace" }}>{feat.summary}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* 3-TIER CODE VIEWER */}
                 {(generatedResult.fullstack_code || generatedResult.fullstack_tier_code) && (

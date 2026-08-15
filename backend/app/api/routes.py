@@ -640,6 +640,38 @@ async def get_agents_auto_learn_insights():
     }
 
 
+# ── Autonomous Web Research & Project Generation for 36 Agents ─────────────
+from app.core.web_enhanced_generator import research_and_generate_project
+
+
+class AgentWebsiteGenRequest(BaseModel):
+    agent_key: Optional[str] = "web-developer"
+    agent_name: Optional[str] = "Web Developer AI"
+    app_type: Optional[str] = "custom"
+    project_name: Optional[str] = ""
+    prompt: str = "Build enterprise fullstack web application"
+    category: Optional[str] = "Software"
+
+
+@router.post("/agents/generate-website")
+@router.post("/agents/web-research-project")
+async def agent_generate_web_project(req: AgentWebsiteGenRequest):
+    """36 AI Agents conduct live web research for advanced features and deploy complete applications."""
+    agent_title = req.agent_name or req.agent_key.replace("-", " ").title()
+    proj_name = req.project_name or req.app_type.replace("-", " ").title()
+    if not proj_name or proj_name == "Custom":
+        proj_name = f"{agent_title} Platform"
+
+    result = await research_and_generate_project(
+        prompt=req.prompt,
+        name=proj_name,
+        agent_name=agent_title,
+        category=req.category or "Software"
+    )
+    return result
+
+
+
 
 # ── 36 Specialized AI Engines & 14 Modular Layers ────────────────────────────
 from app.engines.engine_registry import engine_registry

@@ -1,54 +1,46 @@
 {
-  "project_name": "Autonomous Drone Controller",
   "slug": "autonomous-drone-controller",
-  "app_type": "generic",
-  "tier": "3-Tier Full-Stack (React 18 + FastAPI + SQLite/PostgreSQL)",
-  "generated_by": "36 Trained AI Agents \u2014 OMEGA NEXUS OS",
-  "timestamp": "2026-08-11T18:15:02.484473",
-  "capabilities": [
-    "Full CRUD REST API",
-    "SQLite auto-initialization & seeding",
-    "React 18 state management with hooks",
-    "Real-time UI updates & modal forms",
-    "Search & filtering",
-    "Analytics endpoint"
-  ],
-  "files": [
+  "name": "Autonomous Drone Controller",
+  "category": "Robotics",
+  "prompt": "Autonomous Drone Delivery & Traffic Routing Platform with Live Geofence and LiDaR telemetry",
+  "built_by_agent": "Robotics & IoT AI",
+  "research_sources_count": 8,
+  "extracted_features": [
     {
-      "path": "frontend/App.jsx",
-      "tier": "Frontend",
-      "language": "react-jsx"
+      "title": "www.sciencedirect.com/science/article/pii/S2352146525001486",
+      "summary": "The complexity of controller design for achieving high agility and speed in maneuvers arises from the non-convex nature of the objective function, reliance on noisy parameter evalu...",
+      "source_url": "https://www.sciencedirect.com/science/article/pii/S2352146525001486"
     },
     {
-      "path": "frontend/styles.css",
-      "tier": "Frontend",
-      "language": "css"
+      "title": "www.meegle.com/en_us/topics/autonomous-drones/autonomous-drone-software-architecture",
+      "summary": "Autonomous Drone Software Architecture Explore diverse perspectives on autonomous drones, covering applications, challenges, benefits, and future trends in this comprehensive keywo...",
+      "source_url": "https://www.meegle.com/en_us/topics/autonomous-drones/autonomous-drone-software-architecture"
     },
     {
-      "path": "backend/main.py",
-      "tier": "Backend",
-      "language": "python",
-      "framework": "FastAPI"
+      "title": "www.nxp.com/applications/AUTONOMOUS-DRONE-SYSTEM",
+      "summary": "Autonomous drone systems use real-time flight control, precise sensing and onboard compute for inspection, mapping, rescue and delivery applications. NXP enables scalable drone arc...",
+      "source_url": "https://www.nxp.com/applications/AUTONOMOUS-DRONE-SYSTEM"
     },
     {
-      "path": "backend/routes.py",
-      "tier": "Backend",
-      "language": "python"
+      "title": "engx.theiet.org/b/blogs/posts/autonomous-uavs-a-system-architecture-perspective",
+      "summary": "An autonomous UAV drone system often follows the Drone Flight Stack architecture as shown in Figure 1. This graphic shows three major parts: the UAV Drone, the Communications Layer...",
+      "source_url": "https://engx.theiet.org/b/blogs/posts/autonomous-uavs-a-system-architecture-perspective"
     },
     {
-      "path": "database/schema.sql",
-      "tier": "Database",
-      "language": "sql"
+      "title": "www.cosmoscomputing.tech",
+      "summary": "AI-driven traffic management for autonomous drone swarms. Real-time deconfliction, 3D corridor planning, and intelligent airspace operations at scale....",
+      "source_url": "https://www.cosmoscomputing.tech/"
     },
     {
-      "path": "database/models.py",
-      "tier": "Database",
-      "language": "python"
-    },
-    {
-      "path": "database/seed.json",
-      "tier": "Database",
-      "language": "json"
+      "title": "drone-traffic-intelligence.vercel.app",
+      "summary": "Operator &amp; Fleet Interface The front-end USS layer for drone delivery companies, agricultural pilots, and fleet managers. Intuitive flight planning, real-time Common Operating ...",
+      "source_url": "https://drone-traffic-intelligence.vercel.app/"
     }
-  ]
+  ],
+  "deployment_url": "/deployed/autonomous-drone-controller/",
+  "live_viewer_url": "/live/autonomous-drone-controller",
+  "cloud_url": "https://omega-nexus-backend.onrender.com/deployed/autonomous-drone-controller/index.html",
+  "gh_pages_url": "https://pushka2006.github.io/omega-nexus/apps/autonomous-drone-controller/index.html",
+  "created_at": "2026-08-15T19:50:18.907361",
+  "status": "deployed_live_200_ok"
 }
