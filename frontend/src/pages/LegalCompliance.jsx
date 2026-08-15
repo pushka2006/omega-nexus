@@ -309,7 +309,7 @@ export default function LegalCompliance() {
         {/* Center-Left: Welcome Back Title */}
         <div style={{ display: "flex", flexDirection: "column", marginLeft: 40 }}>
           <div style={{ fontSize: 16, fontWeight: 700, color: "#FFFFFF", display: "flex", alignItems: "center", gap: 6 }}>
-            Welcome back, {summaryData?.user_name || "Arjun"} 👋
+            Welcome back, {summaryData?.user_name || "Pushkar"} 👋
           </div>
           <div style={{ fontSize: 11, color: "rgba(148,163,184,0.65)", marginTop: 1 }}>
             Here's what's happening with your complaints and legal cases.
@@ -408,10 +408,10 @@ export default function LegalCompliance() {
               color: "#FFFFFF",
               border: "1.5px solid rgba(168, 85, 247, 0.5)"
             }}>
-              AS
+              {summaryData?.user_initials || "PK"}
             </div>
             <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#FFFFFF", lineHeight: 1.1 }}>{summaryData?.user_name || "Arjun Sharma"}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#FFFFFF", lineHeight: 1.1 }}>{summaryData?.user_full_name || summaryData?.user_name || "Pushkar"}</div>
               <div style={{ fontSize: 10, color: "rgba(148,163,184,0.65)" }}>{summaryData?.user_role || "Project Owner"}</div>
             </div>
             <ChevronDown size={14} color="#94A3B8" />

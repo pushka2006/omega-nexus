@@ -5190,6 +5190,11 @@ async def get_legal_summary():
             {"name": "Other Issues", "count": 22 + categories_map["Other Issues"], "color": "#94A3B8"},
         ],
         "recent_activity": all_activities or INITIAL_LEGAL_ACTIVITIES,
+        "user_name": "Pushkar",
+        "user_full_name": "Pushkar",
+        "user_initials": "PK",
+        "user_role": "Project Owner",
+        "user_notifications": 6,
         "sla_info": {
             "first_response_sla": "24-48 hours",
             "resolution_sla": "7-10 business days",
