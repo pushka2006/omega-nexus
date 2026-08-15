@@ -2,7 +2,7 @@
   "name": "omega-nexus-dashboard",
   "version": "2.0.0",
   "private": true,
-  "homepage": "https://pushka2006.github.io/omega-nexus",
+  "homepage": ".",
   "dependencies": {
     "@react-three/fiber": "^9.6.1",
     "@testing-library/dom": "^10.4.1",
