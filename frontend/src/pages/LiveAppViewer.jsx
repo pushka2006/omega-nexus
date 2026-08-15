@@ -49,6 +49,7 @@ export default function LiveAppViewer() {
   const [activeCodeFile, setActiveCodeFile] = useState(null);
   const [activeTierTab, setActiveTierTab] = useState("Frontend");
   const [codeLoading, setCodeLoading] = useState(false);
+  const [codeMeta, setCodeMeta] = useState(null);
 
   useEffect(() => {
     const fetchCode = async () => {

@@ -251,6 +251,7 @@ export default function RoboticsIoTStudio() {
   // System info
   const [battery, setBattery] = useState(null);
   const [network, setNetwork] = useState(null);
+  const [deviceSearch, setDeviceSearch] = useState("");
 
   // Refresh timer
   const scanInterval = useRef(null);
