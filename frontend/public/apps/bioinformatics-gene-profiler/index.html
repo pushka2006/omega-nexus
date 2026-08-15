@@ -13,30 +13,29 @@
   --accent: #a855f7;
   --bg: #030712;
   --sidebar-bg: #050a1c;
-  --card-bg: rgba(9, 16, 38, 0.88);
+  --card-bg: rgba(9, 16, 38, 0.9);
   --card-border: rgba(255, 255, 255, 0.08);
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --surface-hover: rgba(255, 255, 255, 0.035);
+  --surface-hover: rgba(255, 255, 255, 0.04);
 }
-body{background:var(--bg);color:var(--text-main);font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;display:flex;overflow-x:hidden}
+body{background:var(--bg);color:var(--text-main);font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;display:flex;overflow-x:hidden;user-select:none}
 .mono{font-family:'JetBrains Mono',monospace}
 
-/* Sidebar */
+/* Layout */
 aside{width:270px;background:var(--sidebar-bg);border-right:1px solid var(--card-border);display:flex;flex-direction:column;flex-shrink:0;min-height:100vh;position:sticky;top:0;z-index:100}
 .sidebar-header{padding:20px 22px;border-bottom:1px solid var(--card-border);display:flex;align-items:center;gap:12px}
 .sidebar-logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#6E56FF,var(--accent));display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:17px;box-shadow:0 0 20px var(--accent)55}
-.sidebar-nav{padding:16px 12px;display:flex;flex-direction:column;gap:3px;flex:1;overflow-y:auto}
+.sidebar-nav{padding:14px 12px;display:flex;flex-direction:column;gap:3px;flex:1;overflow-y:auto}
 .nav-group-title{font-size:9.5px;font-weight:800;color:var(--text-muted);font-family:'JetBrains Mono',monospace;padding:10px 14px 4px;text-transform:uppercase;letter-spacing:.08em}
 .nav-item{display:flex;align-items:center;gap:10px;padding:9px 14px;border-radius:8px;color:var(--text-muted);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid transparent;background:transparent;width:100%;text-align:left}
 .nav-item:hover{color:#fff;background:var(--surface-hover)}
 .nav-item.active{color:#fff;background:rgba(0,245,255,0.1);border-color:rgba(0,245,255,0.25);box-shadow:0 0 20px rgba(0,245,255,0.08)}
 
-/* Main Layout */
-main{flex:1;display:flex;flex-direction:column;min-width:0;background:radial-gradient(ellipse at top right, rgba(110,86,255,0.07), transparent 50%), radial-gradient(ellipse at bottom left, rgba(0,245,255,0.04), transparent 50%)}
+main{flex:1;display:flex;flex-direction:column;min-width:0;background:radial-gradient(ellipse at top right, rgba(110,86,255,0.08), transparent 50%), radial-gradient(ellipse at bottom left, rgba(0,245,255,0.04), transparent 50%)}
 header{height:64px;border-bottom:1px solid var(--card-border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;background:rgba(3,7,18,0.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:90}
 
-/* Cards & Components */
+/* Cards & Buttons */
 .card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:22px;backdrop-filter:blur(16px);transition:all .2s cubic-bezier(.16,1,.3,1)}
 .card:hover{border-color:rgba(255,255,255,0.14)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;border:none;transition:all .18s;font-family:inherit}
@@ -64,9 +63,42 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 
 .pulse-dot{animation:pulseDot 2s infinite}
 </style>
 <script>
-// Enterprise DB & State Engine
+// Web Audio Synthesizer
+class SoundFX {
+  constructor() {
+    this.ctx = null;
+  }
+  init() {
+    if(!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if(AudioCtx) this.ctx = new AudioCtx();
+    }
+  }
+  playBeep(freq=600, duration=0.08, type="sine") {
+    try {
+      this.init();
+      if(!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch(e) {}
+  }
+  click() { this.playBeep(800, 0.05, "sine"); }
+  success() { this.playBeep(1200, 0.12, "triangle"); setTimeout(()=>this.playBeep(1600, 0.15, "triangle"), 80); }
+  error() { this.playBeep(300, 0.2, "sawtooth"); }
+}
+window.sfx = new SoundFX();
+
+// Enterprise Database Engine
 window.NexusDB = {
-  dbName: 'MasterAppDB_' + window.location.pathname.replace(/[^a-z0-9]/gi, '_'),
+  dbName: 'UltraAppDB_' + window.location.pathname.replace(/[^a-z0-9]/gi, '_'),
   getItem(key, fallback) {
     try {
       const v = localStorage.getItem(this.dbName + '_' + key);
@@ -86,6 +118,7 @@ window.NexusDB = {
 };
 
 function showToast(msg, type="success") {
+  window.sfx.success();
   let box = document.getElementById('nexus-toast-box');
   if(!box) {
     box = document.createElement('div');
@@ -102,6 +135,7 @@ function showToast(msg, type="success") {
 }
 
 function switchView(viewId) {
+  window.sfx.click();
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
   const btn = document.getElementById('nav-' + viewId);
@@ -109,11 +143,77 @@ function switchView(viewId) {
   if(btn) btn.classList.add('active');
   if(pnl) pnl.classList.add('active');
   if(viewId === 'dashboard' || viewId === 'analytics') setTimeout(initCharts, 50);
+  if(viewId === 'domain') setTimeout(initDomainCanvas, 50);
 }
 
 function setAppTheme(color) {
+  window.sfx.click();
   document.documentElement.style.setProperty('--accent', color);
   showToast('Theme accent updated to ' + color, 'info');
+}
+
+// Global Shortcuts & Command Palette
+window.addEventListener('keydown', (e) => {
+  if((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    toggleCommandPalette();
+  } else if(e.key === 'Escape') {
+    closeCommandPalette();
+    closeDrawer();
+    closeAddModal();
+  }
+});
+
+function toggleCommandPalette() {
+  window.sfx.click();
+  const pal = document.getElementById('nexus-cmd-palette');
+  if(!pal) return;
+  const isHidden = pal.style.display === 'none' || !pal.style.display;
+  pal.style.display = isHidden ? 'flex' : 'none';
+  if(isHidden) {
+    document.getElementById('cmd-palette-input').focus();
+    renderCmdResults('');
+  }
+}
+
+function closeCommandPalette() {
+  const pal = document.getElementById('nexus-cmd-palette');
+  if(pal) pal.style.display = 'none';
+}
+
+const COMMANDS = [
+  { label: '📊 Switch to Executive Dashboard', action: () => switchView('dashboard') },
+  { label: '⚡ Switch to Core Operations Grid', action: () => switchView('records') },
+  { label: '🛡️ Switch to Domain Intelligence', action: () => switchView('domain') },
+  { label: '🌐 Open Live Web Search', action: () => switchView('webintel') },
+  { label: '💻 Open Bash Terminal & SQL', action: () => switchView('terminal') },
+  { label: '💳 Manage Billing & Stripe Plan', action: () => switchView('billing') },
+  { label: '➕ Create New Enterprise Entity', action: () => openAddModal() },
+  { label: '📥 Export Database Snapshot (JSON)', action: () => exportDataJSON() },
+  { label: '📊 Export Dataset (CSV)', action: () => exportDataCSV() },
+  { label: '🛡️ Trigger Full Zero-Trust Security Audit', action: () => executeCopilotAction('security_audit') },
+  { label: '⚡ Flush SQLite WAL DB Checkpoints', action: () => executeCopilotAction('optimize_db') }
+];
+
+function renderCmdResults(q) {
+  const list = document.getElementById('cmd-palette-results');
+  if(!list) return;
+  const qLow = (q||'').toLowerCase();
+  const filtered = COMMANDS.filter(c => c.label.toLowerCase().includes(qLow));
+  list.innerHTML = filtered.map((c, i) => `
+    <div onclick="executeCommand(${i})" style="padding:10px 14px;border-radius:8px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:space-between;color:#cbd5e1;transition:all .15s" onmouseover="this.style.background='rgba(0,245,255,0.1)';this.style.color='#fff'" onmouseout="this.style.background='transparent';this.style.color='#cbd5e1'">
+      <span>${c.label}</span>
+      <kbd style="font-size:10px;color:var(--text-muted);font-family:monospace">↵ Enter</kbd>
+    </div>
+  `).join('');
+}
+
+function executeCommand(idx) {
+  window.sfx.click();
+  closeCommandPalette();
+  const q = document.getElementById('cmd-palette-input')?.value || '';
+  const filtered = COMMANDS.filter(c => c.label.toLowerCase().includes(q.toLowerCase()));
+  if(filtered[idx]) filtered[idx].action();
 }
 </script>
 </head>
@@ -138,7 +238,7 @@ function setAppTheme(color) {
       <span>⚡</span> Core Data Operations
     </button>
     <button class="nav-item" id="nav-domain" onclick="switchView('domain')">
-      <span>🧬</span> Genomics & Patient Telemetry
+      <span>🧬</span> Genomics & Vitals Telemetry
     </button>
 
     <div class="nav-group-title">Intelligence & Tools</div>
@@ -183,17 +283,22 @@ function setAppTheme(color) {
   <!-- TOPBAR -->
   <header>
     <div style="display:flex;align-items:center;gap:16px">
-      <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:8px;padding:6px 14px;font-size:11.5px;font-family:monospace">
+      <!-- Live Telemetry Ticker -->
+      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:8px;padding:6px 14px;font-size:11.5px;font-family:monospace">
         <span style="width:7px;height:7px;border-radius:50%;background:#10b981" class="pulse-dot"></span>
-        <span style="color:#fff;font-weight:700">Cluster: omega-production-us1</span>
+        <span style="color:#fff;font-weight:700">LIVE CLUSTER:</span>
+        <span style="color:#38bdf8" id="ticker-cpu">CPU: 12.4%</span>
         <span style="color:var(--text-muted)">|</span>
-        <span style="color:#38bdf8">FastAPI 0.115 &bull; SQLite WAL</span>
+        <span style="color:#10b981" id="ticker-ram">RAM: 1.4GB</span>
+        <span style="color:var(--text-muted)">|</span>
+        <span style="color:#a855f7" id="ticker-rps">RPS: 14,250</span>
       </div>
 
-      <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid var(--card-border);border-radius:8px;padding:6px 14px;color:var(--text-muted);font-size:11.5px">
-        <span>🔍 Command:</span>
-        <kbd style="background:rgba(255,255,255,0.08);padding:1px 6px;border-radius:4px;font-size:9.5px;font-family:monospace;color:#fff">Ctrl+K</kbd>
-      </div>
+      <!-- Quick Command Bar -->
+      <button onclick="toggleCommandPalette()" style="background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:8px;padding:6px 14px;color:var(--text-muted);font-size:11.5px;display:flex;align-items:center;gap:8px;cursor:pointer">
+        <span>🔍 Search or type command...</span>
+        <kbd style="background:rgba(255,255,255,0.1);padding:1px 5px;border-radius:4px;font-size:9.5px;font-family:monospace;color:#fff">Ctrl+K</kbd>
+      </button>
     </div>
 
     <div style="display:flex;align-items:center;gap:12px">
@@ -210,7 +315,7 @@ function setAppTheme(color) {
         <span>📥</span> Snapshot
       </button>
       <button class="btn btn-primary" onclick="openAddModal()" style="padding:6px 14px;font-size:11px">
-        <span>➕</span> New Entity
+        <span>➕</span> New Record
       </button>
     </div>
   </header>
@@ -289,7 +394,7 @@ function setAppTheme(color) {
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:14px">
   <div>
     <h1 style="font-size:22px;font-weight:800;color:#fff">Core Operations & Data Grid</h1>
-    <p style="font-size:12px;color:var(--text-muted);margin-top:2px">Full ACID transactions, real-time search indexing, and inline record mutations.</p>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:2px">Click any row to open the sliding telemetry inspector.</p>
   </div>
   <div style="display:flex;gap:8px">
     <button class="btn btn-outline" onclick="exportDataCSV()">CSV</button>
@@ -309,7 +414,7 @@ function setAppTheme(color) {
       </div>
     </div>
     <div style="font-size:11px;color:var(--text-muted);font-family:monospace">
-      Auto-saving to Persistent SQLite DB
+      Persistent SQLite WAL &bull; Real-Time Replication
     </div>
   </div>
 
@@ -338,28 +443,14 @@ function setAppTheme(color) {
     
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
   <div>
-    <h1 style="font-size:22px;font-weight:800;color:#fff">Domain Intelligence & Specialized Operations</h1>
-    <p style="font-size:12px;color:var(--text-muted);margin-top:2px">Engineered specifically for HEALTHCARE workloads.</p>
+    <h1 style="font-size:22px;font-weight:800;color:#fff">Specialized Real-Time Dynamic Canvas</h1>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:2px">Live animated matrix engine tailored for HEALTHCARE.</p>
   </div>
-  <button class="btn btn-primary" onclick="showToast('Executed specialized domain optimization routine', 'success')">⚡ Execute Routine</button>
+  <button class="btn btn-primary" onclick="showToast('Optimized real-time simulation beam', 'success')">⚡ Recalibrate Radar</button>
 </div>
 
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-  <div class="card" style="border-left:3px solid #10b981">
-    <div style="font-size:10.5px;color:var(--text-muted);font-family:monospace">REAL-TIME TELEMETRY</div>
-    <div style="font-size:26px;font-weight:800;color:#10b981;margin:4px 0">100% OPERATIONAL</div>
-    <div style="font-size:10.5px;color:#cbd5e1;margin-top:6px">Active streaming channels across WebSocket edge nodes.</div>
-  </div>
-  <div class="card" style="border-left:3px solid #38bdf8">
-    <div style="font-size:10.5px;color:var(--text-muted);font-family:monospace">AI PREDICTION ACCURACY</div>
-    <div style="font-size:26px;font-weight:800;color:#38bdf8;margin:4px 0">99.84%</div>
-    <div style="font-size:10.5px;color:#cbd5e1;margin-top:6px">Trained on multi-modal neural weights.</div>
-  </div>
-  <div class="card" style="border-left:3px solid #a855f7">
-    <div style="font-size:10.5px;color:var(--text-muted);font-family:monospace">THROUGHPUT CAPACITY</div>
-    <div style="font-size:26px;font-weight:800;color:#a855f7;margin:4px 0">50,000 RPS</div>
-    <div style="font-size:10.5px;color:#cbd5e1;margin-top:6px">Autoscaling cluster with Redis cache.</div>
-  </div>
+<div class="card" style="display:flex;align-items:center;justify-content:center;background:#020617;min-height:300px">
+  <canvas id="domain-dynamic-canvas" width="600" height="280"></canvas>
 </div>
 
   </div>
@@ -590,7 +681,29 @@ function setAppTheme(color) {
   </div>
 </main>
 
-<!-- FLOATING 36 AI AGENTS AUTONOMOUS COPILOT -->
+<!-- COMMAND PALETTE MODAL -->
+<div id="nexus-cmd-palette" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(2,6,23,0.85);z-index:9999999;backdrop-filter:blur(12px);align-items:flex-start;justify-content:center;padding-top:120px">
+  <div style="background:#060d28;border:1px solid var(--accent);border-radius:14px;width:540px;max-width:92vw;box-shadow:0 0 60px rgba(0,0,0,0.9);overflow:hidden">
+    <div style="padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:10px">
+      <span style="color:#00F5FF;font-size:16px">🔍</span>
+      <input type="text" id="cmd-palette-input" placeholder="Type a command or search action..." oninput="renderCmdResults(this.value)" style="flex:1;background:transparent;border:none;color:#fff;font-size:13px;outline:none;padding:0" />
+      <kbd onclick="closeCommandPalette()" style="cursor:pointer;background:rgba(255,255,255,0.1);padding:2px 6px;border-radius:4px;font-size:10px;color:var(--text-muted)">ESC</kbd>
+    </div>
+    <div id="cmd-palette-results" style="max-height:280px;overflow-y:auto;padding:8px"></div>
+  </div>
+</div>
+
+<!-- SLIDE-OVER DETAILS DRAWER -->
+<div id="nexus-details-drawer" style="display:none;position:fixed;top:0;right:0;width:440px;max-width:90vw;height:100vh;background:#050b22;border-left:1px solid var(--accent);box-shadow:0 0 60px rgba(0,0,0,0.95);z-index:999999;flex-direction:column;backdrop-filter:blur(24px);animation:slideIn .2s forwards">
+  <div style="padding:18px 22px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between">
+    <h3 style="font-size:14px;font-weight:800;color:#fff" id="drawer-title">Entity Telemetry Inspector</h3>
+    <button onclick="closeDrawer()" style="background:none;border:none;color:var(--text-muted);font-size:16px;cursor:pointer">✕</button>
+  </div>
+  <div id="drawer-content" style="flex:1;padding:22px;overflow-y:auto;font-family:monospace;font-size:11.5px;display:flex;flex-direction:column;gap:14px"></div>
+</div>
+<style>@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}</style>
+
+<!-- FLOATING 36 AI AGENTS COPILOT -->
 <div id="nexus-copilot-container" style="position:fixed;bottom:24px;right:28px;z-index:99999">
   <div id="nexus-copilot-drawer" style="display:none;width:420px;height:500px;background:rgba(4,7,20,0.98);border:1px solid var(--accent);border-radius:16px;box-shadow:0 0 50px rgba(0,0,0,0.95);flex-direction:column;overflow:hidden;margin-bottom:12px;backdrop-filter:blur(24px)">
     <div style="padding:14px 18px;background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between">
@@ -731,14 +844,14 @@ function renderRecordsTable() {
     return `
       <tr style="border-bottom:1px solid rgba(255,255,255,0.05);background:${isChecked ? 'rgba(0,245,255,0.06)' : 'transparent'}" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='${isChecked ? 'rgba(0,245,255,0.06)' : 'transparent'}'">
         <td style="padding:12px 14px"><input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleSelectRow('${item.id}', this.checked)" /></td>
-        <td style="padding:12px 14px;color:#64748b;font-family:monospace">#${item.id}</td>
-        <td style="padding:12px 14px;font-weight:700;color:#fff">${item.name}</td>
+        <td style="padding:12px 14px;color:#64748b;font-family:monospace;cursor:pointer" onclick="openDrawer('${item.id}')">#${item.id}</td>
+        <td style="padding:12px 14px;font-weight:700;color:#fff;cursor:pointer" onclick="openDrawer('${item.id}')">${item.name}</td>
         <td style="padding:12px 14px"><span class="badge badge-purple">${item.category}</span></td>
         <td style="padding:12px 14px;font-family:monospace;color:var(--accent)">${item.val || 'N/A'}</td>
         <td style="padding:12px 14px"><span class="badge ${badgeClass}">${item.status}</span></td>
         <td style="padding:12px 14px;text-align:right;white-space:nowrap">
+          <button onclick="openDrawer('${item.id}')" class="btn btn-outline" style="padding:3px 8px;font-size:10px;margin-right:4px">🔍 View</button>
           <button onclick="openEditModal('${item.id}')" class="btn btn-outline" style="padding:3px 8px;font-size:10px;margin-right:4px">✏️ Edit</button>
-          <button onclick="toggleRecordStatus('${item.id}')" class="btn btn-outline" style="padding:3px 8px;font-size:10px;margin-right:4px">✓ Status</button>
           <button onclick="deleteRecord('${item.id}')" class="btn btn-outline" style="padding:3px 8px;font-size:10px;color:#ef4444;border-color:rgba(239,68,68,0.3)">🗑</button>
         </td>
       </tr>
@@ -748,13 +861,54 @@ function renderRecordsTable() {
   updateBulkBar();
 }
 
+function openDrawer(id) {
+  window.sfx.click();
+  const item = records.find(r => r.id === id);
+  if(!item) return;
+  const dr = document.getElementById('nexus-details-drawer');
+  const title = document.getElementById('drawer-title');
+  const content = document.getElementById('drawer-content');
+  if(!dr || !content) return;
+
+  title.textContent = 'Entity Inspector #' + item.id + ' — ' + item.name;
+  content.innerHTML = `
+    <div style="background:rgba(255,255,255,0.03);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.08)">
+      <div style="color:var(--text-muted);font-size:10px;margin-bottom:4px">NAME</div>
+      <div style="color:#fff;font-size:14px;font-weight:700">${item.name}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:rgba(255,255,255,0.03);padding:10px;border-radius:8px">
+        <div style="color:var(--text-muted);font-size:9.5px">CATEGORY</div>
+        <div style="color:#a855f7;font-weight:700">${item.category}</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);padding:10px;border-radius:8px">
+        <div style="color:var(--text-muted);font-size:9.5px">STATUS</div>
+        <div style="color:#10b981;font-weight:700">${item.status}</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.03);padding:14px;border-radius:10px">
+      <div style="color:var(--text-muted);font-size:10px;margin-bottom:6px">RAW JSON PAYLOAD</div>
+      <pre style="background:#01040f;padding:10px;border-radius:6px;color:#38bdf8;font-size:10px;overflow-x:auto">${JSON.stringify(item, null, 2)}</pre>
+    </div>
+    <button onclick="toggleRecordStatus('${item.id}');closeDrawer()" class="btn btn-primary" style="margin-top:auto">Toggle Status (Active/Done)</button>
+  `;
+  dr.style.display = 'flex';
+}
+
+function closeDrawer() {
+  const dr = document.getElementById('nexus-details-drawer');
+  if(dr) dr.style.display = 'none';
+}
+
 function toggleSelectRow(id, chk) {
+  window.sfx.click();
   if(chk) selectedIds.add(id); else selectedIds.delete(id);
   updateBulkBar();
   renderRecordsTable();
 }
 
 function toggleSelectAll(chk) {
+  window.sfx.click();
   if(chk) records.forEach(r => selectedIds.add(r.id)); else selectedIds.clear();
   updateBulkBar();
   renderRecordsTable();
@@ -800,6 +954,7 @@ function toggleRecordStatus(id) {
 }
 
 function openAddModal() {
+  window.sfx.click();
   document.getElementById('modal-edit-id').value = '';
   document.getElementById('modal-title').textContent = '➕ Create New Enterprise Record';
   document.getElementById('modal-name').value = '';
@@ -810,6 +965,7 @@ function openAddModal() {
 }
 
 function openEditModal(id) {
+  window.sfx.click();
   const r = records.find(x => x.id === id);
   if(!r) return;
   document.getElementById('modal-edit-id').value = id;
@@ -926,6 +1082,7 @@ function handleTerminalInput(e) {
 
 // ── SQL Runner ──
 function runSqlQuery() {
+  window.sfx.click();
   const q = document.getElementById('sql-input-box').value.trim();
   const out = document.getElementById('sql-output-box');
   if(!out) return;
@@ -945,16 +1102,18 @@ function runSqlQuery() {
 
 // ── Copilot Terminal ──
 function toggleNexusCopilot() {
+  window.sfx.click();
   const d = document.getElementById('nexus-copilot-drawer');
   d.style.display = d.style.display === 'none' ? 'flex' : 'none';
 }
 
 function executeCopilotAction(act) {
+  window.sfx.click();
   const chat = document.getElementById('nexus-copilot-chat');
   if(act === 'generate_data') {
     for(let i=1; i<=5; i++) {
       const nId = String(records.length + 1);
-      records.push({ id: nId, name: 'Autonomous Node Beta-' + nId, category: 'AI Cluster', val: '$' + (Math.random()*400+100).toFixed(2), status: 'ACTIVE' });
+      records.push({ id: nId, name: 'Autonomous Node Omega-' + nId, category: 'AI Cluster', val: '$' + (Math.random()*400+100).toFixed(2), status: 'ACTIVE' });
     }
     saveRecords();
     chat.innerHTML += '<div style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:8px;color:#10b981">🤖 <strong>Agent 04:</strong> Injected 5 verified enterprise nodes into database tier.</div>';
@@ -1049,6 +1208,63 @@ function initCharts() {
     }
   });
 }
+
+// Live Dynamic Canvas Radar
+function initDomainCanvas() {
+  const cvs = document.getElementById('domain-dynamic-canvas');
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d');
+  let angle = 0;
+
+  function drawSweep() {
+    ctx.fillStyle = 'rgba(2, 6, 23, 0.25)';
+    ctx.fillRect(0, 0, cvs.width, cvs.height);
+    const cx = cvs.width / 2;
+    const cy = cvs.height / 2;
+    const r = Math.min(cx, cy) - 20;
+
+    // Rings
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, r*0.33, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, r*0.66, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+
+    // Radar Beam
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle + 0.3);
+    ctx.fillStyle = '#a855f733';
+    ctx.fill();
+
+    // Blips
+    for(let i=0; i<6; i++) {
+      const bAng = i * 1.1 + 0.5;
+      const bRad = (i*25 + 40) % r;
+      const bx = cx + Math.cos(bAng) * bRad;
+      const by = cy + Math.sin(bAng) * bRad;
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath(); ctx.arc(bx, by, 3, 0, Math.PI*2); ctx.fill();
+    }
+
+    angle += 0.04;
+    requestAnimationFrame(drawSweep);
+  }
+  drawSweep();
+}
+
+// Live Cluster Ticker
+setInterval(() => {
+  const cpu = (10 + Math.random()*8).toFixed(1);
+  const ram = (1.3 + Math.random()*0.3).toFixed(2);
+  const rps = Math.floor(13800 + Math.random()*1200);
+  const cEl = document.getElementById('ticker-cpu');
+  const rEl = document.getElementById('ticker-ram');
+  const pEl = document.getElementById('ticker-rps');
+  if(cEl) cEl.textContent = 'CPU: ' + cpu + '%';
+  if(rEl) rEl.textContent = 'RAM: ' + ram + 'GB';
+  if(pEl) pEl.textContent = 'RPS: ' + rps.toLocaleString();
+}, 2500);
 
 window.addEventListener('DOMContentLoaded', () => {
   renderRecordsTable();
