@@ -601,6 +601,46 @@ async def trigger_learning_cycle():
     }
 
 
+# ── Auto-Learning & Continuous Improvement for 36 AI Agents ─────────────────
+from app.core.auto_learning_engine import auto_learning_engine
+
+
+@router.get("/agents/auto-learn/status")
+async def get_agents_auto_learn_status():
+    """Return real-time auto-learning status, epochs, heuristics, and intelligence scores."""
+    return auto_learning_engine.get_status()
+
+
+@router.post("/agents/auto-learn/start")
+async def trigger_agents_auto_learn(agent: Optional[str] = None):
+    """Trigger an autonomous deep learning and improvement epoch across 36 agents."""
+    return await auto_learning_engine.trigger_deep_learning_epoch(specific_agent=agent)
+
+
+@router.post("/agents/auto-learn/toggle")
+async def toggle_agents_auto_learn():
+    """Toggle continuous 24/7 background learning mode."""
+    is_active = auto_learning_engine.toggle_auto_learning()
+    return {
+        "status": "success",
+        "is_auto_learning_enabled": is_active,
+        "message": f"Continuous Auto-Learning is now {'ENABLED' if is_active else 'PAUSED'}."
+    }
+
+
+@router.get("/agents/auto-learn/insights")
+async def get_agents_auto_learn_insights():
+    """Return stream of recently acquired heuristics, AST optimizations, and rule adaptations."""
+    status = auto_learning_engine.get_status()
+    return {
+        "epoch": status["current_epoch"],
+        "global_intelligence_score": status["global_intelligence_score"],
+        "total_heuristics_learned": status["total_heuristics_learned"],
+        "insights": status["recent_insights"]
+    }
+
+
+
 # ── 36 Specialized AI Engines & 14 Modular Layers ────────────────────────────
 from app.engines.engine_registry import engine_registry
 
