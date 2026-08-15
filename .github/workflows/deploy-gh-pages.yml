@@ -29,11 +29,11 @@ jobs:
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
 
       - name: Install Frontend Dependencies
         working-directory: ./frontend
-        run: npm install --legacy-peer-deps --no-audit --prefer-offline
+        run: npm install --legacy-peer-deps
 
       - name: Build Static Demo Bundle
         working-directory: ./frontend
