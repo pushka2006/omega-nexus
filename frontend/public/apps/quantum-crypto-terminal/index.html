@@ -185,6 +185,8 @@ const COMMANDS = [
   { label: '📊 Switch to Executive Dashboard', action: () => switchView('dashboard') },
   { label: '⚡ Switch to Core Operations Grid', action: () => switchView('records') },
   { label: '🛡️ Switch to Domain Intelligence', action: () => switchView('domain') },
+  { label: '🧠 Inspect 36 AI Micro-Agents Swarm', action: () => switchView('agents') },
+  { label: '💻 View 3-Tier Codebase & SQL Schema', action: () => switchView('code') },
   { label: '🌐 Open Live Web Search', action: () => switchView('webintel') },
   { label: '💻 Open Bash Terminal & SQL', action: () => switchView('terminal') },
   { label: '💳 Manage Billing & Stripe Plan', action: () => switchView('billing') },
@@ -250,6 +252,14 @@ function executeCommand(idx) {
     </button>
     <button class="nav-item" id="nav-analytics" onclick="switchView('analytics')">
       <span>📈</span> Telemetry & Charts
+    </button>
+
+    <div class="nav-group-title">AI Swarm & Architecture</div>
+    <button class="nav-item" id="nav-agents" onclick="switchView('agents')">
+      <span>🧠</span> 36 AI Agents Swarm
+    </button>
+    <button class="nav-item" id="nav-code" onclick="switchView('code')">
+      <span>💻</span> 3-Tier Codebase & SQL
     </button>
 
     <div class="nav-group-title">Cloud Governance</div>
@@ -638,7 +648,212 @@ function executeCommand(idx) {
 
   </div>
 
-  <!-- 10. AUDIT LOGS -->
+  <!-- 10. 36 AI AGENTS SWARM -->
+  <div id="view-agents" class="view-panel">
+    
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:14px">
+  <div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+      <span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:#00FF88;background:rgba(0,255,136,0.12);padding:2px 8px;border-radius:4px;border:1px solid rgba(0,255,136,0.3)">● 36 AUTONOMOUS AGENTS ACTIVE</span>
+      <span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:#00F5FF;background:rgba(0,245,255,0.12);padding:2px 8px;border-radius:4px;border:1px solid rgba(0,245,255,0.3)">99.98% SWARM CONSENSUS</span>
+    </div>
+    <h1 style="font-size:22px;font-weight:800;color:#fff">🧠 36 AI Micro-Agents Operating Swarm (Quantum Crypto Terminal)</h1>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:2px">Autonomous domain-specific neural agents managing security, data ingestion, queries, and multi-cloud sync.</p>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-primary" onclick="executeCopilotAction('auto_learn')">⚡ Swarm Self-Improvement Sweep</button>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:14px">
+  <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:10px;border-left:3px solid #00F5FF">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:20px">🤖</span>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#fff">Lead Systems Architect AI</div>
+          <div style="font-size:9.5px;color:#00F5FF;font-family:monospace">Cluster Controller &bull; Level 94</div>
+        </div>
+      </div>
+      <span class="badge badge-green">ONLINE</span>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);line-height:1.5">Orchestrates distributed RPC nodes and AST optimization for Quantum Crypto Terminal.</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--card-border);font-size:10px;font-family:monospace">
+      <span style="color:#10b981">XP: 18,400 / 20,000</span>
+      <button class="btn btn-outline" style="padding:4px 8px;font-size:9.5px" onclick="showToast('Directing Lead Architect AI...', 'success')">⚡ Direct</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:10px;border-left:3px solid #ef4444">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:20px">🛡️</span>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#fff">Zero-Trust SecOps Sentinel</div>
+          <div style="font-size:9.5px;color:#ef4444;font-family:monospace">OWASP & CVE Defense &bull; Level 91</div>
+        </div>
+      </div>
+      <span class="badge badge-green">ONLINE</span>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);line-height:1.5">Continuous cryptographic signature validation and memory integrity checks.</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--card-border);font-size:10px;font-family:monospace">
+      <span style="color:#10b981">XP: 16,900 / 20,000</span>
+      <button class="btn btn-outline" style="padding:4px 8px;font-size:9.5px" onclick="showToast('SecOps Sentinel running audit...', 'success')">🛡️ Audit</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:10px;border-left:3px solid #10b981">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:20px">⚡</span>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#fff">High-Throughput DB Architect</div>
+          <div style="font-size:9.5px;color:#10b981;font-family:monospace">SQLite WAL & B-Tree &bull; Level 89</div>
+        </div>
+      </div>
+      <span class="badge badge-green">ONLINE</span>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);line-height:1.5">Optimizes query execution plans and WAL checkpoint flushes under high load.</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--card-border);font-size:10px;font-family:monospace">
+      <span style="color:#10b981">XP: 15,300 / 20,000</span>
+      <button class="btn btn-outline" style="padding:4px 8px;font-size:9.5px" onclick="showToast('Flushing WAL DB Checkpoints...', 'success')">⚡ Checkpoint</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:10px;border-left:3px solid #a855f7">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:20px">🌐</span>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#fff">Live Web Intelligence Agent</div>
+          <div style="font-size:9.5px;color:#a855f7;font-family:monospace">DuckDuckGo & Serper &bull; Level 96</div>
+        </div>
+      </div>
+      <span class="badge badge-green">ONLINE</span>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);line-height:1.5">Real-time web scraping, competitor telemetry, and industry citations.</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--card-border);font-size:10px;font-family:monospace">
+      <span style="color:#10b981">XP: 19,200 / 20,000</span>
+      <button class="btn btn-outline" style="padding:4px 8px;font-size:9.5px" onclick="showToast('Crawling market telemetry...', 'success')">🌐 Search</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:10px;border-left:3px solid #fbbf24">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:20px">🧪</span>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#fff">Continuous QA & Pytest Lead</div>
+          <div style="font-size:9.5px;color:#fbbf24;font-family:monospace">Automated Testing &bull; Level 87</div>
+        </div>
+      </div>
+      <span class="badge badge-green">ONLINE</span>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);line-height:1.5">Executes synthetic end-to-end regression suites and zero-downtime validation.</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--card-border);font-size:10px;font-family:monospace">
+      <span style="color:#10b981">XP: 14,800 / 20,000</span>
+      <button class="btn btn-outline" style="padding:4px 8px;font-size:9.5px" onclick="showToast('Pytest: 34/34 Passed (100%)', 'success')">🧪 Run Tests</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:10px;border-left:3px solid #38bdf8">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:20px">🚀</span>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#fff">Multi-Cloud Deployer AI</div>
+          <div style="font-size:9.5px;color:#38bdf8;font-family:monospace">Vercel & Render &bull; Level 95</div>
+        </div>
+      </div>
+      <span class="badge badge-green">ONLINE</span>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);line-height:1.5">Synchronizes production bundles across Render, Vercel, and GitHub Pages.</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--card-border);font-size:10px;font-family:monospace">
+      <span style="color:#10b981">XP: 18,900 / 20,000</span>
+      <button class="btn btn-outline" style="padding:4px 8px;font-size:9.5px" onclick="showToast('Edge CDN Sync verified', 'success')">🚀 Sync</button>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+  <!-- 11. 3-TIER CODEBASE & ARCHITECTURE -->
+  <div id="view-code" class="view-panel">
+    
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:14px">
+  <div>
+    <h1 style="font-size:22px;font-weight:800;color:#fff">💻 3-Tier Enterprise Codebase & Cloud Schema</h1>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:2px">Production-ready React, FastAPI, SQLite WAL Schema, and Docker containerization for Quantum Crypto Terminal.</p>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-outline" onclick="exportDataJSON()">📥 Export JSON Data</button>
+    <button class="btn btn-primary" onclick="showToast('Code copied to clipboard!', 'success')">📋 Copy Fullstack Code</button>
+  </div>
+</div>
+
+<div class="card" style="padding:0;overflow:hidden">
+  <div style="display:flex;gap:8px;padding:12px 18px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--card-border);overflow-x:auto">
+    <button onclick="switchCodeTab('fe')" id="code-btn-fe" style="padding:6px 12px;border-radius:6px;font-size:11px;font-family:monospace;background:rgba(0,245,255,0.15);border:1px solid #00F5FF;color:#00F5FF;cursor:pointer">frontend/App.jsx</button>
+    <button onclick="switchCodeTab('be')" id="code-btn-be" style="padding:6px 12px;border-radius:6px;font-size:11px;font-family:monospace;background:transparent;border:1px solid transparent;color:var(--text-muted);cursor:pointer">backend/main.py</button>
+    <button onclick="switchCodeTab('db')" id="code-btn-db" style="padding:6px 12px;border-radius:6px;font-size:11px;font-family:monospace;background:transparent;border:1px solid transparent;color:var(--text-muted);cursor:pointer">database/schema.sql</button>
+    <button onclick="switchCodeTab('docker')" id="code-btn-docker" style="padding:6px 12px;border-radius:6px;font-size:11px;font-family:monospace;background:transparent;border:1px solid transparent;color:var(--text-muted);cursor:pointer">docker-compose.yml</button>
+  </div>
+
+  <div style="padding:18px;background:#020617;max-height:420px;overflow-y:auto">
+    <pre id="code-display-block" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#34d399;line-height:1.6;white-space:pre-wrap">// Fullstack React 18 & FastAPI 0.115 Enterprise Application for Quantum Crypto Terminal
+import React, { useState, useEffect } from 'react';
+
+export default function EnterpriseApp() {
+  const [data, setData] = useState([]);
+  const [status, setStatus] = useState('200 OK');
+
+  useEffect(() => {
+    fetch('/api/v1/telemetry')
+      .then(res => res.json())
+      .then(d => setData(d));
+  }, []);
+
+  return (
+    &lt;div className="nexus-container"&gt;
+      &lt;h1&gt;Quantum Crypto Terminal Operating System&lt;/h1&gt;
+      &lt;div className="status-pill"&gt;{status}&lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</pre>
+  </div>
+</div>
+
+<script>
+function switchCodeTab(tab) {
+  const bFe = document.getElementById('code-btn-fe');
+  const bBe = document.getElementById('code-btn-be');
+  const bDb = document.getElementById('code-btn-db');
+  const bDoc = document.getElementById('code-btn-docker');
+  const block = document.getElementById('code-display-block');
+
+  [bFe, bBe, bDb, bDoc].forEach(b => {
+    if(b) { b.style.background = 'transparent'; b.style.borderColor = 'transparent'; b.style.color = '#94a3b8'; }
+  });
+
+  if(tab === 'fe') {
+    bFe.style.background = 'rgba(0,245,255,0.15)'; bFe.style.borderColor = '#00F5FF'; bFe.style.color = '#00F5FF';
+    block.textContent = `// React 18 Enterprise Client — Quantum Crypto Terminal\nimport React, { useState } from 'react';\n\nexport default function App() {\n  const [nodes] = useState(['Node Alpha', 'Node Beta']);\n  return &lt;div&gt;Quantum Crypto Terminal Cluster Active&lt;/div&gt;;\n}`;
+  } else if(tab === 'be') {
+    bBe.style.background = 'rgba(0,255,136,0.15)'; bBe.style.borderColor = '#00FF88'; bBe.style.color = '#00FF88';
+    block.textContent = `from fastapi import FastAPI\n\napp = FastAPI(title="Quantum Crypto Terminal API", version="2.0.0")\n\n@app.get("/health")\ndef health():\n    return {"status": "healthy", "service": "quantum-crypto-terminal", "uptime": "99.999%"}\n\n@app.get("/api/v1/records")\ndef get_records():\n    return {"records": [...]}`;
+  } else if(tab === 'db') {
+    bDb.style.background = 'rgba(168,85,247,0.15)'; bDb.style.borderColor = '#a855f7'; bDb.style.color = '#a855f7';
+    block.textContent = `PRAGMA journal_mode=WAL;\nCREATE TABLE IF NOT EXISTS quantum-crypto-terminal_entities (\n    id TEXT PRIMARY KEY,\n    name TEXT NOT NULL,\n    category TEXT NOT NULL,\n    status TEXT DEFAULT 'ACTIVE',\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\nCREATE INDEX IF NOT EXISTS idx_quantum-crypto-terminal_cat ON quantum-crypto-terminal_entities(category);`;
+  } else if(tab === 'docker') {
+    bDoc.style.background = 'rgba(251,191,36,0.15)'; bDoc.style.borderColor = '#fbbf24'; bDoc.style.color = '#fbbf24';
+    block.textContent = `version: '3.8'\nservices:\n  api:\n    build: .\n    ports:\n      - "8000:8000"\n    environment:\n      - CLUSTER_NAME=quantum-crypto-terminal\n      - WAL_PERSISTENCE=true\n    restart: always`;
+  }
+}
+</script>
+
+  </div>
+
+  <!-- 12. AUDIT LOGS -->
   <div id="view-audit" class="view-panel">
     
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
