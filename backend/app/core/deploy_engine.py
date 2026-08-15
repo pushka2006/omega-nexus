@@ -2161,8 +2161,8 @@ def generate_custom_prompt_website(prompt: str, name: str = "", theme: str = "cy
         name = " ".join(words[:4]) if words else "AI Custom Platform"
 
     slug = slugify(name)
-    from app.core.industry_grade_engine import generate_industry_grade_app
-    return generate_industry_grade_app(slug, name)
+    from app.core.master_enterprise_engine import generate_master_enterprise_app
+    return generate_master_enterprise_app(slug, name)
 
 
 # ── Deployment Runner ────────────────────────────────────────────────────────
