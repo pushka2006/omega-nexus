@@ -42,6 +42,21 @@ Software Research Business ... (40+ agent types)
 | **MinIO (S3)** | Object storage for files, media, backups |
 | **Virtual Memory DB** | Active agent context, reasoning chains, working memory (Redis hot + MongoDB warm, auto-promotes to long-term) |
 
+## Cloud Deployment Architecture
+
+| Component | Platform | Configuration & Role |
+| :--- | :--- | :--- |
+| **Source Code** | **GitHub** | Version control with `.gitignore` secret protection (`pushka2006/omega-nexus`) |
+| **Static Demo** | **GitHub Pages** | Automated static frontend via GitHub Actions (`.github/workflows/deploy-gh-pages.yml`) |
+| **Main Frontend** | **Vercel** | Production React SPA with client-side SPA routing (`vercel.json`) |
+| **FastAPI Backend** | **Render** | Production Web Service with Blueprint (`render.yaml`), `Procfile`, and `Dockerfile` |
+| **Database** | **MongoDB Atlas** | Managed cloud MongoDB cluster configured via `MONGODB_URI` with auto SQLite fallback |
+| **Redis Cache** | **Managed Redis** | Cloud Redis (Upstash / Redis Cloud / Render Redis) configured via `REDIS_URL` |
+| **AI APIs** | **Backend Only** | OpenAI, Anthropic, Emergent LLM called solely server-side (0 client exposure) |
+| **Secrets** | **Render / Vercel Env** | Secure runtime environment variables injected in cloud dashboards |
+
+> See **[`DEPLOYMENT.md`](DEPLOYMENT.md)** for complete step-by-step cloud deployment instructions.
+
 ## Quick Start
 
 ### Prerequisites

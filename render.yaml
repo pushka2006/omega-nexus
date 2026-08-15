@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: omega-nexus-backend
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: DB_NAME
+        value: nexus_os
+      # Configure sensitive variables in the Render Dashboard (Do NOT commit raw values)
+      - key: MONGO_URL
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: EMERGENT_LLM_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
