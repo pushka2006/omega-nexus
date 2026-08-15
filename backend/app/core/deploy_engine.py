@@ -2155,30 +2155,14 @@ setTimeout(drawCanvasChart, 200);
 
 
 def generate_custom_prompt_website(prompt: str, name: str = "", theme: str = "cyber") -> str:
-    """Route user prompt to specialized app template or dynamic prompt generator."""
+    """Route user prompt to Industry-Grade Full-Stack application generator."""
     if not name:
         words = [w.capitalize() for w in re.sub(r'[^a-zA-Z0-9 ]', '', prompt).split() if len(w) > 2]
         name = " ".join(words[:4]) if words else "AI Custom Platform"
 
-    p = (prompt + " " + name).lower()
-    project = {"name": name, "category": "Software", "prompt": prompt}
-
-    if any(k in p for k in ["ecommerce", "shop", "store", "cart", "retail", "product"]):
-        return generate_ecommerce_app(project)
-    if any(k in p for k in ["trading", "crypto", "stock", "forex", "quant", "portfolio"]):
-        return generate_trading_app(project)
-    if any(k in p for k in ["blog", "cms", "article", "editorial", "publish", "content", "news"]):
-        return generate_content_app(project)
-    if any(k in p for k in ["healthcare", "medical", "patient", "clinic", "ecg", "vital", "hospital"]):
-        return generate_healthcare_app(project)
-    if any(k in p for k in ["security", "cyber", "firewall", "threat", "soc", "vulnerability"]):
-        return generate_cybersecurity_app(project)
-    if any(k in p for k in ["robotics", "drone", "ros", "telemetry", "hardware"]):
-        return generate_robotics_app(project)
-    if any(k in p for k in ["smart city", "iot", "traffic", "grid"]):
-        return generate_smartcity_app(project)
-
-    return generate_dynamic_prompt_website(prompt, name, theme)
+    slug = slugify(name)
+    from app.core.industry_grade_engine import generate_industry_grade_app
+    return generate_industry_grade_app(slug, name)
 
 
 # ── Deployment Runner ────────────────────────────────────────────────────────
