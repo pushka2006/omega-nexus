@@ -45,13 +45,7 @@ const STYLE_MODIFIERS = {
   "pixel-art":      "pixel art, 32-bit, retro game sprite, bright colors, isometric, crisp pixels",
 };
 
-/* Build a real Pollinations.ai URL for actual AI image generation */
-function makePollinationsUrl(prompt, style, idx, customSeed) {
-  const modifier = STYLE_MODIFIERS[style] || "high quality, detailed";
-  const fullPrompt = `${prompt}, ${modifier}`;
-  const seedVal = customSeed ? Number(customSeed) + idx : Math.floor(Math.random() * 999999) + idx * 1000;
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?width=800&height=800&seed=${seedVal}&model=flux&nologo=true&enhance=true`;
-}
+
 
 const SUGGESTIONS = [
   "A majestic dragon soaring above a neon cyberpunk city at night, 8K detail",

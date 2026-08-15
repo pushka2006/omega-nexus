@@ -91,7 +91,7 @@ export default function MasterBrainView() {
   const [tps, setTps] = useState(24875);
   const [metrics, setMetrics] = useState({ cpu: 0, ram: 0, ram_used_gb: 0, ram_total_gb: 0, active_processes: 0 });
   const [dbStats, setDbStats] = useState({ messages: 0, memories: 0, tasks_total: 0, kb_files: 0 });
-  const [revenue, setRevenue] = useState(null);
+  const [, setRevenue] = useState(null);
   
   // 36 Agent Tasks Matrix State
   const [allTasks, setAllTasks] = useState([]);

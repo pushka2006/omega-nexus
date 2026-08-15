@@ -28,7 +28,7 @@ export default function ProjectsHub() {
   const [deploying, setDeploying] = useState(false);
   const [deployResult, setDeployResult] = useState(null);   // { url, provider, success }
   const [deployProvider, setDeployProvider] = useState("local");  // 'local' | 'surge'
-  const [improvingApp, setImprovingApp] = useState(false);
+  const [, setImprovingApp] = useState(false);
 
   const handleImproveApp = async (project) => {
     if (!project) return;

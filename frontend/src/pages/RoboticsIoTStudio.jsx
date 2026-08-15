@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
-  Cpu, Bot, Wifi, Activity, ShieldCheck, Zap, Globe, Layers, Settings,
-  Bell, ChevronRight, Laptop, Camera, Radio, Mic, HardDrive, RefreshCw,
-  CheckCircle2, AlertCircle, Power, Bluetooth, Usb, Monitor, Volume2,
-  Gamepad2, Battery, Network, Eye, Smartphone, Server, ChevronDown, X,
-  Signal, Plug, Search, Info
+  Cpu, Bot, Wifi, Activity, ShieldCheck, Zap, Globe, Settings,
+  Laptop, Camera, Radio, HardDrive, RefreshCw,
+  Bluetooth, Usb, Monitor, Volume2,
+  Gamepad2, Battery, Network,
+  Signal, Plug, Search
 } from "lucide-react";
 import { http } from "../lib/api";
 import { toast } from "../components/Toast";
@@ -251,13 +251,6 @@ export default function RoboticsIoTStudio() {
   // System info
   const [battery, setBattery] = useState(null);
   const [network, setNetwork] = useState(null);
-  const [userAgent] = useState(navigator.userAgent);
-
-  // Request flows
-  const [requestModal, setRequestModal] = useState(null); // 'usb'|'serial'|'bluetooth'|'hid'
-  const [requestedDevice, setRequestedDevice] = useState(null);
-  const [deviceSearch, setDeviceSearch] = useState("");
-  const [agentFilter, setAgentFilter] = useState("ALL");
 
   // Refresh timer
   const scanInterval = useRef(null);
@@ -389,17 +382,7 @@ export default function RoboticsIoTStudio() {
   const netTop = telemetry?.network_topology ?? {};
   const sysInfo = telemetry?.system_info ?? {};
 
-  // Combined device list for the "All Devices" view
-  const allDevices = [
-    ...browserDevices.map(d => ({ ...d, _src: "browser" })),
-    ...iotDevices.map(d => ({ ...d, source: "agent", _src: "agent", details: `Protocol: ${d.protocol} · Firmware: ${d.firmware}` })),
-  ];
 
-  const filteredDevices = allDevices.filter(d => {
-    const matchSearch = !deviceSearch || d.name.toLowerCase().includes(deviceSearch.toLowerCase()) || d.type.toLowerCase().includes(deviceSearch.toLowerCase());
-    const matchAgent = agentFilter === "ALL" || (agentFilter === "BROWSER" && d._src === "browser") || (agentFilter === "AGENT" && d._src === "agent");
-    return matchSearch && matchAgent;
-  });
 
   const NAV_ITEMS = [
     { label: "Overview",    icon: Activity },

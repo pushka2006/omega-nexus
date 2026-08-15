@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import {
-  Rocket, ShoppingBag, TrendingUp, Cpu, HeartPulse, Sparkles, CheckCircle2,
-  ExternalLink, ArrowLeft, Play, Pause, RefreshCw, Layers, ShieldCheck, Zap,
-  DollarSign, Activity, Terminal, Send, Search, Filter, ShoppingCart, Plus, Trash2, Eye
+  ExternalLink, ArrowLeft, ShoppingCart
 } from "lucide-react";
 import { toast } from "../components/Toast";
 
@@ -11,10 +9,7 @@ import { http } from "../lib/api";
 
 export default function LiveAppViewer() {
   const { slug } = useParams();
-  const [searchParams] = useSearchParams();
-  const projectId = searchParams.get("id");
 
-  const [isRunning, setIsRunning] = useState(true);
   const [cart, setCart] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
   const [promptText, setPromptText] = useState("");
@@ -47,14 +42,13 @@ export default function LiveAppViewer() {
 
   const [viewMode, setViewMode] = useState("iframe"); // 'iframe' | 'native' | 'code'
   const currentSlug = (slug || "").toLowerCase();
-  const [deployedUrl, setDeployedUrl] = useState(`http://localhost:8000/deployed/${currentSlug}/index.html`);
+  const [deployedUrl] = useState(`http://localhost:8000/deployed/${currentSlug}/index.html`);
 
   const [sourceCode, setSourceCode] = useState("");
   const [codeFiles, setCodeFiles] = useState([]);
   const [activeCodeFile, setActiveCodeFile] = useState(null);
   const [activeTierTab, setActiveTierTab] = useState("Frontend");
   const [codeLoading, setCodeLoading] = useState(false);
-  const [codeMeta, setCodeMeta] = useState(null);
 
   useEffect(() => {
     const fetchCode = async () => {

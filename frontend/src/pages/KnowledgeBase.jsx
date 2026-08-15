@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import {
   Brain, Search, Mic, SlidersHorizontal, BookOpen, Cpu, Briefcase, Database,
   User, Palette, Megaphone, Crown, DollarSign, Sparkles, Bell, Bookmark,
-  Clock, Save, FileText, CheckCircle2, ChevronRight, ArrowUpRight, Flame,
-  Plus, Upload, FolderPlus, FileCode, Layers, ShieldCheck, PlayCircle, Eye,
-  X, ExternalLink, RefreshCw, Globe, Send, Check, Copy
+  Clock, Save, FileText, ChevronRight, ArrowUpRight,
+  Upload, FolderPlus, FileCode, Layers, ShieldCheck, PlayCircle,
+  X, Globe
 } from "lucide-react";
 import { http } from "../lib/api";
 import { toast } from "../components/Toast";
@@ -32,7 +32,7 @@ export default function KnowledgeBase() {
   const [savedNotes, setSavedNotes] = useState(() => JSON.parse(localStorage.getItem("kb_saved_notes") || "[]"));
 
   // 3. Upload Document
-  const [uploadFile, setUploadFile] = useState(null);
+  const [, setUploadFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   // 4. Create Collection
@@ -51,7 +51,7 @@ export default function KnowledgeBase() {
   ]);
 
   // Live Backend Telemetry Data
-  const [hubData, setHubData] = useState(null);
+  const [, setHubData] = useState(null);
 
   const fetchHubData = async () => {
     try {

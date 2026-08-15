@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
-  TrendingUp, DollarSign, BarChart3, ShoppingCart, Users, Award,
-  Calendar, Filter, Bell, Globe, ChevronRight, ArrowUpRight, ArrowDownRight,
-  PieChart, Sliders, Layers, CheckCircle2, AlertTriangle, Info, RefreshCw, Cpu, Sparkles, Terminal
+  TrendingUp, DollarSign, BarChart3, Users, Award,
+  Calendar, Filter, Bell, ChevronRight,
+  Sparkles
 } from "lucide-react";
 import { http } from "../lib/api";
 import { toast } from "../components/Toast";
@@ -11,7 +11,7 @@ export default function RevenueHub() {
   const [activeNav, setActiveNav] = useState("Overview");
   const [timeframe, setTimeframe] = useState("Weekly");
   const [revenueData, setRevenueData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [simulateInput, setSimulateInput] = useState("");
   const [simulateResult, setSimulateResult] = useState(null);
   const [simulating, setSimulating] = useState(false);

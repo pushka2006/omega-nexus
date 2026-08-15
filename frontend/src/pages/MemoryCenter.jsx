@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { http } from "../lib/api";
 import { toast } from "../components/Toast";
-import { Brain, Plus, Trash2, Search, Star, Edit2, Check, X, Tag } from "lucide-react";
+import { Brain, Plus, Trash2, Search, Star, Edit2, Check, X } from "lucide-react";
 import { useSecurity } from "../lib/SecurityContext";
 
 const CATEGORIES = ["general", "code", "research", "project", "people", "system"];
@@ -109,7 +109,7 @@ export default function MemoryCenter() {
   useEffect(() => { load(); }, [load]);
 
   // ?new=1 URL param
-  useEffect(() => { if (loc.search.includes("new=1")) setAdding(true); }, []);
+  useEffect(() => { if (loc.search.includes("new=1")) setAdding(true); }, [loc.search]);
 
   // Keyboard: N to add
   useEffect(() => {

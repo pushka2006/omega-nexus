@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { http } from "../lib/api";
 import { toast } from "../components/Toast";
 import {
-  Settings as SettingsIcon, Key, Database, Globe, Palette, Save, Copy, Eye, EyeOff,
+  Key, Palette, Save, Copy, Eye, EyeOff,
   Wifi, CheckCircle2, XCircle, Layout, PanelLeft, PanelRight, Bot
 } from "lucide-react";
 

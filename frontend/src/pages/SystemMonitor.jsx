@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { http } from "../lib/api";
 import { toast } from "../components/Toast";
 import { Activity, Cpu, HardDrive, Wifi, Zap, Server, Pause, Play, Download, AlertTriangle, Bluetooth, Headphones, MousePointer, Keyboard, Video, Monitor, Settings, ExternalLink, RefreshCw } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 const METRIC_KEYS = ["cpu", "ram", "gpu", "net"];
 const METRIC_COLORS = { cpu: "#00F5FF", ram: "#6E56FF", gpu: "#FF2E88", net: "#00FF88" };
