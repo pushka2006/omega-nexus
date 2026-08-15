@@ -6,6 +6,7 @@ import {
   Briefcase, TrendingUp, Zap, DollarSign, Bot, Database, FlaskConical, Megaphone, Scale, Layers, Radio, Volume2,
   Image as ImageIcon
 } from "lucide-react";
+import { http } from "../lib/api";
 import CommandPalette from "./CommandPalette";
 import { useSecurity } from "../lib/SecurityContext";
 import { useVoice } from "../lib/VoiceContext";
@@ -56,8 +57,23 @@ export default function Shell({ children }) {
   const loc = useLocation();
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [time, setTime] = useState(new Date().toLocaleTimeString());
+  const [shellStats, setShellStats] = useState({ agents: "36", projects: "42", live: "42 Live" });
   const { lockSystem } = useSecurity();
   const { startListening } = useVoice();
+
+  // Fetch real counts from backend
+  useEffect(() => {
+    http.get("/projects").then(res => {
+      if (res.data && Array.isArray(res.data)) {
+        setShellStats(prev => ({ ...prev, projects: String(res.data.length), live: `${res.data.length} Live` }));
+      }
+    }).catch(() => {});
+    http.get("/agents").then(res => {
+      if (res.data && Array.isArray(res.data)) {
+        setShellStats(prev => ({ ...prev, agents: String(res.data.length) }));
+      }
+    }).catch(() => {});
+  }, []);
 
   // Sidebar Position Preference (Left vs Right)
   const [sidebarPosition, setSidebarPosition] = useState(() => localStorage.getItem("nexus_sidebar_position") || "left");
@@ -98,7 +114,7 @@ export default function Shell({ children }) {
 
   const activePage = "MASTER CONTROL CENTER";
 
-  const isAuthPage = loc.pathname.startsWith("/auth/mock/") || loc.pathname.startsWith("/marketing") || loc.pathname.startsWith("/finance") || loc.pathname.startsWith("/monitor") || loc.pathname.startsWith("/legal") || loc.pathname.startsWith("/compliance") || loc.pathname.startsWith("/biometrics") || loc.pathname.startsWith("/live") || loc.pathname.startsWith("/deployed");
+  const isAuthPage = loc.pathname.startsWith("/auth/mock/") || loc.pathname.startsWith("/live") || loc.pathname.startsWith("/deployed");
   if (isAuthPage) {
     return <>{children}</>;
   }
@@ -195,7 +211,9 @@ export default function Shell({ children }) {
                         background: "rgba(99, 102, 241, 0.2)", border: "1px solid rgba(99, 102, 241, 0.4)",
                         color: "#818cf8", fontFamily: "monospace"
                       }}>
-                        {n.badge}
+                        {n.id === "agents" ? shellStats.agents :
+                         n.id === "projects" ? shellStats.projects :
+                         n.id === "deployments" ? shellStats.live : n.badge}
                       </span>
                     )}
                   </Link>
