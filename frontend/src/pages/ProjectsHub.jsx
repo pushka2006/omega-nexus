@@ -325,22 +325,25 @@ export default function ProjectsHub() {
     }
   }, []);
 
-  // Real deployment via backend
+  // Real multi-platform cloud deployment via backend
   const deployProject = useCallback(async (project) => {
-    if (deploying) return;
+    if (deploying || !project) return;
     setDeploying(true);
     setDeployResult(null);
-    toast.info(`🚀 Deploying ${project.name}...`);
+    const slug = getProjectSlug(project.name || project.id);
+    toast.info(`🚀 36 AI Agents deploying '${project.name}' to ${deployProvider.toUpperCase()}...`);
     try {
-      const res = await http.post(`/projects/${project._id || project.id}/deploy`, { provider: deployProvider });
+      const res = await http.post(`/projects/${slug}/deploy`, { provider: deployProvider });
       const d = res.data;
       setDeployResult(d);
       if (d.success) {
-        toast.success(`✅ ${project.name} deployed! Opening site...`);
+        toast.success(`✅ ${project.name} deployed to ${d.provider}!`);
         fetchProjectsData();
-        setTimeout(() => window.open(d.url, "_blank"), 800);
+        if (d.url) {
+          setTimeout(() => window.open(d.url, "_blank"), 600);
+        }
       } else {
-        toast.error("Deployment failed — switching to Local Server.");
+        toast.error("Deployment failed — check logs.");
       }
     } catch (err) {
       toast.error("Deploy error: " + (err?.response?.data?.detail || err.message));
@@ -1372,15 +1375,31 @@ export default function ProjectsHub() {
                 DEPLOY TO PRODUCTION
               </div>
 
-              {/* Provider Toggle */}
-              <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
-                {[{ id: "surge", label: "🌊 surge.sh (Public URL)" }, { id: "local", label: "💻 Local Server" }].map(p => (
+              {/* Multi-Cloud Provider Selector */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6, marginBottom: 14 }}>
+                {[
+                  { id: "render", label: "🚀 Render Cloud" },
+                  { id: "surge", label: "🌐 Surge.sh CDN" },
+                  { id: "vercel", label: "⚡ Vercel Edge" },
+                  { id: "github", label: "📄 GitHub Pages" },
+                  { id: "netlify", label: "🪐 Netlify CDN" },
+                  { id: "local", label: "💻 Local Server" }
+                ].map(p => (
                   <button
                     key={p.id}
                     onClick={() => setDeployProvider(p.id)}
-                    style={{ flex: 1, padding: "7px 10px", borderRadius: 8, fontSize: 10, fontWeight: 700, fontFamily: "monospace", cursor: "pointer", border: "none", transition: "all .15s",
+                    style={{
+                      padding: "7px 6px",
+                      borderRadius: 8,
+                      fontSize: 9.5,
+                      fontWeight: 700,
+                      fontFamily: "monospace",
+                      cursor: "pointer",
+                      border: "none",
+                      transition: "all .15s",
                       background: deployProvider === p.id ? "linear-gradient(90deg,#6E56FF,#00F5FF)" : "rgba(255,255,255,0.06)",
-                      color: deployProvider === p.id ? "#fff" : "rgba(148,163,184,0.7)" }}
+                      color: deployProvider === p.id ? "#fff" : "rgba(148,163,184,0.7)"
+                    }}
                   >
                     {p.label}
                   </button>
