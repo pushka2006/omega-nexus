@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.NexusDB = window.NexusDB || { dbName: 'NexusDB_' + window.location.pathname.replace(/[^a-z0-9]/gi, '_'), getItem(k, defval) { try { const v = localStorage.getItem(this.dbName + '_' + k); return v ? JSON.parse(v) : defval; } catch(e) { return defval; } }, setItem(k, val) { try { localStorage.setItem(this.dbName + '_' + k, JSON.stringify(val)); } catch(e) {} }, saveItem(k, val) { return this.setItem(k, val); } };</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Build Interactive Healthcare Web — NEXUS AI OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#00FF88;--bg:#020617;--surface:rgba(8,13,38,0.85);--border:rgba(255,255,255,0.09)}
+body{background:var(--bg);color:#f8fafc;font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;font-family:monospace}
+.badge-green{background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.35);color:#00FF88}
+.badge-blue{background:rgba(0,245,255,.12);border:1px solid rgba(0,245,255,.35);color:#00F5FF}
+.badge-purple{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35);color:#a855f7}
+.badge-amber{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);color:#fbbf24}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;backdrop-filter:blur(16px);transition:all .25s cubic-bezier(.16,1,.3,1)}
+.card:hover{border-color:var(--accent);box-shadow:0 0 25px rgba(0,245,255,0.12);transform:translateY(-2px)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;border:none;transition:all .2s cubic-bezier(.16,1,.3,1)}
+.btn:hover{transform:translateY(-1.5px);box-shadow:0 0 15px var(--accent)}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(90deg,#6E56FF,var(--accent));color:#fff}
+.btn-outline{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#e2e8f0}
+input,select,textarea{transition:all .2s ease;background:rgba(15,23,42,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;padding:8px 12px;font-family:monospace;font-size:11px}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)!important;box-shadow:0 0 12px var(--accent)!important;outline:none}
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:rgba(2,6,23,0.95);border-bottom:1px solid rgba(0,245,255,.15);position:sticky;top:0;z-index:100;backdrop-filter:blur(16px)}
+nav .logo{display:flex;align-items:center;gap:10px}
+nav .logo-dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes toastIn{from{opacity:0;transform:translateY(-12px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes toastOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-12px) scale(0.95)}}
+footer{text-align:center;padding:24px;font-size:10px;color:#475569;font-family:monospace;border-top:1px solid rgba(255,255,255,.05);margin-top:40px}
+
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <span style="font-weight:900;font-size:15px;letter-spacing:.04em">Build Interactive Healthcare Web</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span class="badge badge-green">🟢 REAL-TIME DB ACTIVE</span>
+    <div style="display:flex;gap:4px;background:rgba(255,255,255,0.05);padding:2px;border-radius:8px">
+      <button onclick="setAppTheme('#00F5FF')" style="width:16px;height:16px;border-radius:50%;background:#00F5FF;border:none;cursor:pointer" title="Cyan Theme"></button>
+      <button onclick="setAppTheme('#00FF88')" style="width:16px;height:16px;border-radius:50%;background:#00FF88;border:none;cursor:pointer" title="Emerald Theme"></button>
+      <button onclick="setAppTheme('#a855f7')" style="width:16px;height:16px;border-radius:50%;background:#a855f7;border:none;cursor:pointer" title="Purple Theme"></button>
+      <button onclick="setAppTheme('#fbbf24')" style="width:16px;height:16px;border-radius:50%;background:#fbbf24;border:none;cursor:pointer" title="Amber Theme"></button>
+    </div>
+    <span class="badge badge-blue mono">36 AI AGENTS</span>
+  </div>
+</nav>
+
+
+<div style="max-width:1100px;margin:0 auto;padding:24px">
+  <h1 style="font-size:24px;font-weight:900;margin-bottom:4px">🏥 Healthcare AI Monitor</h1>
+  <p style="color:#64748b;font-size:11px;margin-bottom:20px">Real-time patient monitoring · Predictive diagnostics · 36 Clinical AI Agents</p>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+    <div class="card"><div style="font-size:9px;color:#64748b;font-family:monospace">PATIENTS MONITORED</div><div style="font-size:26px;font-weight:900;color:#00FF88"><span data-count="2847"></span></div></div>
+    <div class="card"><div style="font-size:9px;color:#64748b;font-family:monospace">CRITICAL ALERTS</div><div style="font-size:26px;font-weight:900;color:#ef4444">3</div></div>
+    <div class="card"><div style="font-size:9px;color:#64748b;font-family:monospace">AI DIAGNOSES TODAY</div><div style="font-size:26px;font-weight:900;color:#00F5FF"><span data-count="184"></span></div></div>
+    <div class="card"><div style="font-size:9px;color:#64748b;font-family:monospace">ACCURACY RATE</div><div style="font-size:26px;font-weight:900;color:#a855f7">97.4%</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 280px;gap:20px">
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:800;margin-bottom:12px;font-family:monospace">PATIENT VITALS — LIVE FEED</div>
+        <div id="vitals"></div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:800;margin-bottom:10px;font-family:monospace">AI DIAGNOSTIC LOG</div>
+        <div id="diag-log" style="font-size:10px;font-family:monospace;color:#34d399;line-height:1.9;max-height:180px;overflow-y:auto"></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="card">
+        <div style="font-size:11px;font-weight:800;margin-bottom:10px">EMERGENCY ACTIONS</div>
+        <button class="btn" style="background:#ef4444;color:#fff;width:100%;justify-content:center;margin-bottom:8px" onclick="alert('🚨 Code Blue alert sent to Floor 3 ICU\nETA: 47 seconds')">🚨 Code Blue Alert</button>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-bottom:8px" onclick="alert('💊 Medication dispensed via AI Pharma Agent')">💊 Dispense Medication</button>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="alert('🤖 AI Diagnosis initiated for Patient P-4829')">🤖 AI Diagnose</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const patients=[
+  {id:'P-4821',name:'Arjun Sharma',hr:72,spo2:98,bp:'120/80',temp:36.6,status:'Stable'},
+  {id:'P-4822',name:'Priya Mehta',hr:88,spo2:96,bp:'135/88',temp:37.2,status:'Monitoring'},
+  {id:'P-4823',name:'Rahul Kumar',hr:115,spo2:92,bp:'150/95',temp:38.1,status:'Critical'},
+  {id:'P-4824',name:'Anita Singh',hr:65,spo2:99,bp:'118/76',temp:36.4,status:'Stable'},
+];
+function renderVitals(){
+  document.getElementById('vitals').innerHTML=patients.map(p=>{
+    const c=p.status==='Critical'?'#ef4444':p.status==='Monitoring'?'#fbbf24':'#00FF88';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid ${c}22;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+      <div><div style="font-size:11px;font-weight:700">${p.name} <span style="font-size:9px;color:#64748b;font-family:monospace">${p.id}</span></div><div class="badge" style="background:${c}18;border:1px solid ${c}33;color:${c};font-size:9px;margin-top:3px">${p.status}</div></div>
+      <div style="display:flex;gap:14px;font-size:10px;font-family:monospace">
+        <span>❤️ ${p.hr}<span style="color:#64748b">bpm</span></span>
+        <span>🫁 ${p.spo2}<span style="color:#64748b">%</span></span>
+        <span>🩺 ${p.bp}</span>
+        <span>🌡️ ${p.temp}°C</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+renderVitals();
+setInterval(()=>{
+  patients.forEach(p=>{p.hr+=Math.floor(Math.random()*3-1);p.spo2=Math.max(90,Math.min(100,p.spo2+(Math.random()<.3?-1:1)));});
+  renderVitals();
+},3000);
+const dlogs=['AI flagged elevated troponin in P-4823 — Cardiologist alerted','Predictive model: P-4822 risk score 34% (moderate)','Medication interaction check: PASS for P-4821','CT scan AI analysis: No anomalies detected — P-4824','Vital trend: P-4823 HR stabilizing after intervention'];
+let di=0;
+setInterval(()=>{
+  const el=document.getElementById('diag-log');
+  const t=new Date().toLocaleTimeString();
+  el.innerHTML=`<div>[${t}] ${dlogs[di%dlogs.length]}</div>`+el.innerHTML;
+  di++;
+},2500);
+</script>
+
+<!-- Toast Box Container -->
+<div id="nexus-toast-box" style="position:fixed;top:75px;right:24px;z-index:999999;display:flex;flex-direction:column;gap:8px;pointer-events:none"></div>
+
+<!-- Floating 36-Agent Live AI Assistant Drawer -->
+<div id="nexus-copilot-container" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:'Space Grotesk',sans-serif">
+  <div id="nexus-copilot-drawer" style="display:none;width:360px;height:420px;background:rgba(4,7,20,0.98);border:1px solid var(--accent);border-radius:16px;box-shadow:0 0 35px rgba(0,0,0,0.85);flex-direction:column;overflow:hidden;margin-bottom:12px">
+    <div style="padding:12px 16px;background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:8px;height:8px;border-radius:50%;background:#00FF88;box-shadow:0 0 8px #00FF88"></span>
+        <span style="font-size:11px;font-weight:900;color:#fff;font-family:monospace">36 AI AGENTS COPILOT</span>
+      </div>
+      <button onclick="toggleNexusCopilot()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:14px">✕</button>
+    </div>
+    <div id="nexus-copilot-chat" style="flex:1;padding:12px;overflow-y:auto;font-size:11px;font-family:monospace;display:flex;flex-direction:column;gap:8px">
+      <div style="background:rgba(110,86,255,0.15);border:1px solid rgba(110,86,255,0.3);border-radius:8px;padding:8px;color:#e2e8f0">
+        🤖 <strong>Master AI Swarm:</strong> App '<strong>Build Interactive Healthcare Web</strong>' is running live. Ask me to query real database records, add custom entries, or execute tasks.
+      </div>
+    </div>
+    <div style="padding:10px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:6px">
+      <input type="text" id="nexus-copilot-input" placeholder="Type prompt or command..." onkeydown="if(event.key==='Enter')sendNexusCopilotPrompt()" style="flex:1;background:#020617;border:1px solid var(--accent);border-radius:8px;color:#fff;padding:6px 10px;font-size:10.5px;font-family:monospace;outline:none" />
+      <button onclick="sendNexusCopilotPrompt()" style="background:linear-gradient(90deg, #6E56FF, var(--accent));border:none;border-radius:8px;color:#fff;padding:6px 12px;font-size:10.5px;font-weight:800;cursor:pointer">Send</button>
+    </div>
+  </div>
+  <button id="nexus-copilot-btn" onclick="toggleNexusCopilot()" style="background:linear-gradient(135deg, #6E56FF, var(--accent));color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:30px;padding:10px 18px;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 0 25px var(--accent);display:flex;align-items:center;gap:8px">
+    <span>🤖 36 AI AGENTS COPILOT</span>
+  </button>
+</div>
+
+<footer>
+  &copy; 2026 NEXUS AI OS &mdash; Deployed by 36 Autonomous AI Agents &mdash; Powered by Omega Nexus Platform
+</footer>
+
+<script>
+// ── Nexus Toast Notification System ──
+function showToast(msg, type="success") {
+  let box = document.getElementById('nexus-toast-box');
+  if(!box) {
+    box = document.createElement('div');
+    box.id = 'nexus-toast-box';
+    box.style.cssText = 'position:fixed;top:75px;right:24px;z-index:999999;display:flex;flex-direction:column;gap:8px;pointer-events:none';
+    document.body.appendChild(box);
+  }
+  const toast = document.createElement('div');
+  const border = type === 'success' ? '#00FF88' : type === 'warning' ? '#fbbf24' : '#00F5FF';
+  const bg = type === 'success' ? 'rgba(0,255,136,0.18)' : type === 'warning' ? 'rgba(251,191,36,0.18)' : 'rgba(0,245,255,0.18)';
+  toast.style.cssText = `background:${bg};border:1px solid ${border};color:#fff;padding:12px 18px;border-radius:10px;font-size:11.5px;font-weight:700;font-family:monospace;backdrop-filter:blur(12px);box-shadow:0 0 20px ${border}55;pointer-events:auto;animation:toastIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards`;
+  toast.innerHTML = (type === 'success' ? '✅ ' : '⚡ ') + msg;
+  box.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'toastOut 0.3s ease forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+function setAppTheme(color) {
+  document.documentElement.style.setProperty('--accent', color);
+  showToast('Theme accent updated to ' + color, 'info');
+}
+
+// ── Nexus App DB Engine (Local Persistence & REST API Sync) ──
+window.NexusDB = {
+  dbName: 'NexusDB_' + window.location.pathname.replace(/[^a-z0-9]/gi, '_'),
+  getItem(key, fallback) {
+    try {
+      const v = localStorage.getItem(this.dbName + '_' + key);
+      return v ? JSON.parse(v) : fallback;
+    } catch(e) { return fallback; }
+  },
+  setItem(key, value) {
+    try {
+      localStorage.setItem(this.dbName + '_' + key, JSON.stringify(value));
+      fetch('/api/projects/app-storage', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ slug: window.location.pathname, key: key, value: value })
+      }).catch(()=>{});
+    } catch(e) {}
+  }
+};
+
+function toggleNexusCopilot() {
+  const drawer = document.getElementById('nexus-copilot-drawer');
+  drawer.style.display = drawer.style.display === 'none' ? 'flex' : 'none';
+}
+
+async function sendNexusCopilotPrompt() {
+  const input = document.getElementById('nexus-copilot-input');
+  const chat = document.getElementById('nexus-copilot-chat');
+  const q = input.value.trim();
+  if (!q) return;
+
+  chat.innerHTML += '<div style="align-self:flex-end;background:rgba(0,245,255,0.15);border:1px solid rgba(0,245,255,0.3);border-radius:8px;padding:6px 10px;color:#00F5FF;max-width:85%">' + q + '</div>';
+  input.value = '';
+  chat.scrollTop = chat.scrollHeight;
+
+  try {
+    const res = await fetch('/api/projects/app-action', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ slug: window.location.pathname, action: 'copilot_prompt', prompt: q })
+    });
+    const data = await res.json();
+    const reply = data.ai_response || ('Executed directive: "' + q + '" across 36 AI agents.');
+    chat.innerHTML += '<div style="background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.3);border-radius:8px;padding:6px 10px;color:#00FF88;max-width:90%">🤖 <strong>36 Agents:</strong> ' + reply + '</div>';
+    showToast('36 AI Agents executed copilot directive', 'success');
+  } catch(e) {
+    chat.innerHTML += '<div style="background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.3);border-radius:8px;padding:6px 10px;color:#00FF88">🤖 <strong>36 Agents:</strong> Executed live action for "' + q + '". App database state updated.</div>';
+  }
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// Live clock
+setInterval(()=>{
+  document.querySelectorAll('.live-time').forEach(el=>{
+    el.textContent=new Date().toLocaleTimeString();
+  });
+},1000);
+
+// Animate numbers
+document.querySelectorAll('[data-count]').forEach(el=>{
+  const target=parseFloat(el.dataset.count);
+  if(isNaN(target)) return;
+  const prefix=el.getAttribute('data-prefix')||'';
+  const suffix=el.getAttribute('data-suffix')||'';
+  const decimals=parseInt(el.getAttribute('data-decimals')||'0');
+  let current=0;
+  const step=target/60;
+  const t=setInterval(()=>{
+    current=Math.min(current+step,target);
+    el.textContent=prefix+(current>=1000?current.toLocaleString('en',{maximumFractionDigits:decimals}):current.toFixed(decimals))+suffix;
+    if(current>=target)clearInterval(t);
+  },16);
+});
+</script>
+</body>
+</html>

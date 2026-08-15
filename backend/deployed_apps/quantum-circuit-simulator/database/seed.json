@@ -1,0 +1,17 @@
+[
+  {
+    "id": "1",
+    "title": "BTC Long Swing",
+    "status": "OPEN"
+  },
+  {
+    "id": "2",
+    "title": "ETH Short Hedge",
+    "status": "OPEN"
+  },
+  {
+    "id": "3",
+    "title": "NVDA Momentum",
+    "status": "CLOSED"
+  }
+]

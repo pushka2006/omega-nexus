@@ -1,0 +1,13 @@
+/* MedTrack — OMEGA NEXUS OS UI/UX Designer AI */
+:root {
+  --bg: #020617;
+  --card: rgba(8,12,38,.9);
+  --accent: #00F5FF;
+  --green: #00FF88;
+  --purple: #6E56FF;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: #f8fafc; font-family: 'Space Grotesk', system-ui, sans-serif; min-height: 100vh; }
+input, select, textarea { font-family: inherit; outline: none; }
+button { font-family: inherit; cursor: pointer; transition: opacity .15s, transform .1s; }
+button:hover { opacity: .85; transform: translateY(-1px); }

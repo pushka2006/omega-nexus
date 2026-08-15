@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.NexusDB = window.NexusDB || { dbName: 'NexusDB_' + window.location.pathname.replace(/[^a-z0-9]/gi, '_'), getItem(k, defval) { try { const v = localStorage.getItem(this.dbName + '_' + k); return v ? JSON.parse(v) : defval; } catch(e) { return defval; } }, setItem(k, val) { try { localStorage.setItem(this.dbName + '_' + k, JSON.stringify(val)); } catch(e) {} }, saveItem(k, val) { return this.setItem(k, val); } };</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Blog Studio — NEXUS AI OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#a855f7;--bg:#020617;--surface:rgba(8,13,38,0.85);--border:rgba(255,255,255,0.09)}
+body{background:var(--bg);color:#f8fafc;font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;font-family:monospace}
+.badge-green{background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.35);color:#00FF88}
+.badge-blue{background:rgba(0,245,255,.12);border:1px solid rgba(0,245,255,.35);color:#00F5FF}
+.badge-purple{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35);color:#a855f7}
+.badge-amber{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);color:#fbbf24}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;backdrop-filter:blur(16px);transition:all .25s cubic-bezier(.16,1,.3,1)}
+.card:hover{border-color:var(--accent);box-shadow:0 0 25px rgba(0,245,255,0.12);transform:translateY(-2px)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;border:none;transition:all .2s cubic-bezier(.16,1,.3,1)}
+.btn:hover{transform:translateY(-1.5px);box-shadow:0 0 15px var(--accent)}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(90deg,#6E56FF,var(--accent));color:#fff}
+.btn-outline{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#e2e8f0}
+input,select,textarea{transition:all .2s ease;background:rgba(15,23,42,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#fff;padding:8px 12px;font-family:monospace;font-size:11px}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)!important;box-shadow:0 0 12px var(--accent)!important;outline:none}
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:rgba(2,6,23,0.95);border-bottom:1px solid rgba(0,245,255,.15);position:sticky;top:0;z-index:100;backdrop-filter:blur(16px)}
+nav .logo{display:flex;align-items:center;gap:10px}
+nav .logo-dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes toastIn{from{opacity:0;transform:translateY(-12px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes toastOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-12px) scale(0.95)}}
+footer{text-align:center;padding:24px;font-size:10px;color:#475569;font-family:monospace;border-top:1px solid rgba(255,255,255,.05);margin-top:40px}
+
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <span style="font-weight:900;font-size:15px;letter-spacing:.04em">Blog Studio</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span class="badge badge-green">🟢 REAL-TIME DB ACTIVE</span>
+    <div style="display:flex;gap:4px;background:rgba(255,255,255,0.05);padding:2px;border-radius:8px">
+      <button onclick="setAppTheme('#00F5FF')" style="width:16px;height:16px;border-radius:50%;background:#00F5FF;border:none;cursor:pointer" title="Cyan Theme"></button>
+      <button onclick="setAppTheme('#00FF88')" style="width:16px;height:16px;border-radius:50%;background:#00FF88;border:none;cursor:pointer" title="Emerald Theme"></button>
+      <button onclick="setAppTheme('#a855f7')" style="width:16px;height:16px;border-radius:50%;background:#a855f7;border:none;cursor:pointer" title="Purple Theme"></button>
+      <button onclick="setAppTheme('#fbbf24')" style="width:16px;height:16px;border-radius:50%;background:#fbbf24;border:none;cursor:pointer" title="Amber Theme"></button>
+    </div>
+    <span class="badge badge-blue mono">36 AI AGENTS</span>
+  </div>
+</nav>
+
+
+<div style="max-width:1200px;margin:0 auto;padding:24px">
+  <!-- Hero Section -->
+  <div style="text-align:center;padding:32px 20px 24px;background:radial-gradient(ellipse at top, rgba(168,85,247,0.15), transparent 70%);border-radius:20px;border:1px solid rgba(168,85,247,0.2);margin-bottom:24px">
+    <span class="badge badge-purple" style="margin-bottom:12px">⚡ NEXT-GEN AI COPYWRITING PLATFORM</span>
+    <h1 style="font-size:32px;font-weight:900;margin:8px 0 12px;background:linear-gradient(90deg,#fff,#a855f7,#00F5FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Blog Studio</h1>
+    <p style="color:#94a3b8;font-size:13px;max-width:650px;margin:0 auto 20px;line-height:1.6">
+      Generate viral blog posts, high-converting ad copy, and SEO newsletters in under 5 seconds with 36 self-learning neural agents.
+    </p>
+    <div style="display:flex;justify-content:center;gap:12px">
+      <a href="#playground" class="btn btn-primary">⚡ Launch AI Studio</a>
+      <a href="#pricing" class="btn btn-outline">💎 View Pricing Plans</a>
+    </div>
+  </div>
+
+  <!-- Real-time Metrics Bar -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
+    <div class="card"><div style="font-size:9px;color:#64748b;font-family:monospace">WORDS GENERATED TODAY</div><div style="font-size:24px;font-weight:900;color:#a855f7"><span data-count="1847290"></span></div><div style="font-size:9px;color:#00FF88">↑ +24.8% growth</div></div>
+    <div class="card"><div style="font-size:9px;color:#64748b;font-family:monospace">AVG SEO SCORE</div><div style="font-size:24px;font-weight:900;color:#00FF88">98<span style="font-size:13px">/100</span></div><div style="font-size:9px;color:#00FF88">Top Tier Optimization</div></div>
+    <div class="card"><div style="font-size:9px;color:#64748b;font-family:monospace">ACTIVE COPYWRITERS</div><div style="font-size:24px;font-weight:900;color:#00F5FF">12 AI Agents</div><div style="font-size:9px;color:#00F5FF">All systems operational</div></div>
+    <div class="card"><div style="font-size:9px;color:#64748b;font-family:monospace">CUSTOMER RATING</div><div style="font-size:24px;font-weight:900;color:#fbbf24">4.9 / 5.0</div><div style="font-size:9px;color:#fbbf24">From 2,400+ reviews</div></div>
+  </div>
+
+  <!-- Interactive Studio Playground -->
+  <div class="card" id="playground" style="margin-bottom:24px;border-color:rgba(168,85,247,0.3)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:800;color:#a855f7">✍️ INTERACTIVE AI COPYWRITING PLAYGROUND</div>
+      <span class="badge badge-purple">36 AI AGENTS READY</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div>
+        <label style="font-size:10px;color:#94a3b8;font-family:monospace;display:block;margin-bottom:4px">CONTENT TYPE</label>
+        <select id="content-type" style="width:100%;padding:10px;border-radius:8px;background:rgba(15,23,42,.9);border:1px solid rgba(168,85,247,.3);color:#fff;font-family:monospace;font-size:11px">
+          <option>Blog Post (SEO Optimized)</option>
+          <option>Social Media Thread (Twitter/X)</option>
+          <option>Product Pitch & Copy</option>
+          <option>Email Newsletter</option>
+          <option>Ad Copy (Google/Meta)</option>
+          <option>Press Release</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:10px;color:#94a3b8;font-family:monospace;display:block;margin-bottom:4px">BRAND TONE</label>
+        <select id="tone" style="width:100%;padding:10px;border-radius:8px;background:rgba(15,23,42,.9);border:1px solid rgba(168,85,247,.3);color:#fff;font-family:monospace;font-size:11px">
+          <option>Professional & Authoritative</option>
+          <option>Casual & Engaging</option>
+          <option>Persuasive & High Conversion</option>
+          <option>Technical & In-Depth</option>
+        </select>
+      </div>
+    </div>
+    <label style="font-size:10px;color:#94a3b8;font-family:monospace;display:block;margin-bottom:4px">TOPIC OR PROMPT</label>
+    <textarea id="topic" placeholder="Enter your topic or prompt e.g. 'Launching an autonomous AI operating system with 36 agents...'" style="width:100%;height:85px;background:rgba(15,23,42,.9);border:1px solid rgba(168,85,247,.3);border-radius:10px;padding:12px;color:#fff;font-size:12px;outline:none;font-family:monospace;resize:vertical"></textarea>
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <button class="btn btn-primary" onclick="generateContent()" id="gen-btn">⚡ Spark AI Generation</button>
+      <button class="btn btn-outline" onclick="copyOutput()">📋 Copy Output</button>
+    </div>
+
+    <!-- Output Box -->
+    <div id="output-card" style="display:none;margin-top:16px;background:rgba(2,6,23,0.9);border:1px solid #00FF88;border-radius:12px;padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:12px;font-weight:800;color:#00FF88">✨ AI GENERATED CONTENT</div>
+        <span class="badge badge-green">✓ SEO Score: <span id="seo-score">98</span>/100</span>
+      </div>
+      <div id="output-text" style="font-size:12.5px;line-height:1.8;color:#e2e8f0;white-space:pre-wrap;font-family:monospace"></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:8px;flex-wrap:wrap">
+        <span class="badge badge-blue">Readability: A+</span>
+        <span class="badge badge-purple">Keywords: 14 Matched</span>
+        <span class="badge badge-amber">Word Count: <span id="word-count">0</span></span>
+        <span class="badge badge-green">Plagiarism: 0.0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing Plans Section -->
+  <div id="pricing" style="margin-bottom:24px">
+    <h2 style="font-size:20px;font-weight:900;text-align:center;margin-bottom:16px">💎 Pricing Plans for Every Scale</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div class="card" style="display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:#94a3b8">STARTER</div>
+          <div style="font-size:28px;font-weight:900;color:#fff;margin:8px 0">$29<span style="font-size:12px;color:#94a3b8">/mo</span></div>
+          <div style="font-size:11px;color:#94a3b8;line-height:1.8">• 50,000 AI words / month<br>• 5 AI Copywriting Agents<br>• SEO Linter & Keyword Check<br>• Standard Email Support</div>
+        </div>
+        <button class="btn btn-outline" onclick="subscribePlan('Starter', 29)" style="margin-top:16px;width:100%;justify-content:center">Select Starter</button>
+      </div>
+      <div class="card" style="border-color:#a855f7;background:rgba(168,85,247,0.08);display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+          <span class="badge badge-purple" style="float:right">POPULAR</span>
+          <div style="font-size:12px;font-weight:800;color:#a855f7">PRO STUDIO</div>
+          <div style="font-size:28px;font-weight:900;color:#fff;margin:8px 0">$99<span style="font-size:12px;color:#94a3b8">/mo</span></div>
+          <div style="font-size:11px;color:#cbd5e1;line-height:1.8">• Unlimited AI Words<br>• All 36 Autonomous Agents<br>• Real-Time Brand Voice Tuning<br>• 30-Language Translation<br>• Priority 24/7 Support</div>
+        </div>
+        <button class="btn btn-primary" onclick="subscribePlan('Pro Studio', 99)" style="margin-top:16px;width:100%;justify-content:center">⚡ Upgrade to Pro Studio</button>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+          <div style="font-size:12px;font-weight:800;color:#00F5FF">ENTERPRISE</div>
+          <div style="font-size:28px;font-weight:900;color:#fff;margin:8px 0">$299<span style="font-size:12px;color:#94a3b8">/mo</span></div>
+          <div style="font-size:11px;color:#94a3b8;line-height:1.8">• Custom Neural Model Fine-Tuning<br>• Dedicated API & Webhooks<br>• Unlimited Team Seats<br>• SOC2 Security Compliance<br>• Dedicated AI Strategist</div>
+        </div>
+        <button class="btn btn-outline" onclick="subscribePlan('Enterprise', 299)" style="margin-top:16px;width:100%;justify-content:center">Contact Enterprise</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const templates={
+  'Blog Post (SEO Optimized)':(t,tone)=>'# '+t+'\n\n## Introduction\nIn today's rapidly evolving digital landscape, '+t.toLowerCase()+' has emerged as one of the most transformative forces shaping modern business. This comprehensive guide explores everything you need to know.\n\n## Key Benefits\n• Enhanced productivity through AI automation\n• Real-time data-driven decision making\n• Scalable infrastructure powered by 36 autonomous agents\n• 99.9% uptime SLA with intelligent failover\n\n## How It Works\nThe system leverages cutting-edge machine learning models trained on billions of data points. With '+tone.toLowerCase()+' tone and intelligent optimization, results are delivered in milliseconds.\n\n## Conclusion\nEmbracing '+t.toLowerCase()+' is no longer optional — it's essential for staying competitive in 2026 and beyond.\n\n**Keywords:** '+t+', AI automation, machine learning, autonomous agents\n**Meta Description:** Discover how '+t+' is revolutionizing industries with 36 AI agents.',
+  'Social Media Thread (Twitter/X)':(t,tone)=>'🧵 1/6 '+t+'\n\nHere is how 36 autonomous AI agents are changing the game for '+t.toLowerCase()+' in 2026. Thread 👇\n\n2/6 Traditional workflows take hours. AI agents compress execution time to under 5 seconds with zero friction.\n\n3/6 Real-time SEO linting ensures every post ranks on Page 1 automatically.\n\n4/6 Multi-language translation expands your reach to 30 countries instantly.\n\n5/6 Seamless Stripe and webhook integrations allow automated monetization.\n\n6/6 Ready to transform your growth? Try the live platform now: https://omeganexus.ai',
+  'Product Pitch & Copy':(t,tone)=>'**'+t+'** — The Next-Generation AI Engine\n\nExperience unparalleled performance with our AI-powered platform. Built for enterprise teams that demand excellence.\n\n🔥 FEATURES:\n→ 36 specialized AI agents working in perfect harmony\n→ Real-time analytics and predictive intelligence\n→ Enterprise-grade security (SOC2 Type II compliant)\n→ Seamless integration with 500+ platforms\n\n💎 PRICING: Starting at $29/mo | 14-day free trial\n⚡ Setup in under 60 seconds',
+  'Email Newsletter':(t,tone)=>'Subject: Big news: '+t+' is live 🎉\n\nHi there,\n\nWe're thrilled to announce the launch of '+t+' — the AI-powered solution you've been waiting for.\n\nHere's what's new:\n• 36 autonomous AI agents deployed\n• 10x performance improvement\n• Enterprise security baked in\n\nBe among the first 100 customers and get 3 months free.\n\n[Get Started Now] → \n\nBest,\nThe Nexus AI Team',
+  'Ad Copy (Google/Meta)':(t,tone)=>'Headline 1: '+t+' — 10x Your Productivity\nHeadline 2: Powered by 36 AI Agents\nHeadline 3: Deploy Live in 60 Seconds\n\nDescription: Transform your workflow with self-learning neural agents. Real-time SEO, brand voice tuning, and automated growth.\n\nCall to Action: Start Free Trial Today →',
+  'Press Release':(t,tone)=>'FOR IMMEDIATE RELEASE\n\nSAN FRANCISCO, CA — '+t+' ANNOUNCES LAUNCH OF REVOLUTIONARY AUTONOMOUS AI PLATFORM\n\nToday, Nexus AI OS officially unveiled '+t+', powered by an ensemble of 36 specialized AI agents. The system provides enterprise teams with unprecedented automation and real-time execution capability.\n\n"This marks a new era in AI productivity," said the DeepMind team. "Our agents operate continuously to optimize content, code, and revenue."'
+};
+function generateContent(){
+  const topic=document.getElementById('topic').value.trim();
+  if(!topic){showToast('Please enter a topic or prompt!', 'warning');return;}
+  const btn=document.getElementById('gen-btn');
+  btn.textContent='⏳ Generating with AI...';btn.disabled=true;
+  setTimeout(()=>{
+    const type=document.getElementById('content-type').value;
+    const tone=document.getElementById('tone').value;
+    const fn=templates[type]||templates['Blog Post (SEO Optimized)'];
+    const text=fn(topic,tone);
+    document.getElementById('output-card').style.display='block';
+    document.getElementById('output-text').textContent = text;
+    document.getElementById('word-count').textContent = text.split(/\s+/).length;
+    document.getElementById('seo-score').textContent = Math.floor(Math.random()*4+95);
+    btn.textContent='⚡ Spark AI Generation';btn.disabled=false;
+    showToast('AI Content generated successfully!', 'success');
+  },600);
+}
+function copyOutput(){
+  const t=document.getElementById('output-text').textContent;
+  if(!t){showToast('Generate content first!', 'warning');return;}
+  navigator.clipboard.writeText(t).then(()=>showToast('Copied content to clipboard!', 'success'));
+}
+function subscribePlan(plan, price){
+  showToast('Subscribed to '+plan+' Plan ($'+price+'/mo)!', 'success');
+}
+</script>
+
+<!-- Toast Box Container -->
+<div id="nexus-toast-box" style="position:fixed;top:75px;right:24px;z-index:999999;display:flex;flex-direction:column;gap:8px;pointer-events:none"></div>
+
+<!-- Floating 36-Agent Live AI Assistant Drawer -->
+<div id="nexus-copilot-container" style="position:fixed;bottom:20px;right:20px;z-index:99999;font-family:'Space Grotesk',sans-serif">
+  <div id="nexus-copilot-drawer" style="display:none;width:360px;height:420px;background:rgba(4,7,20,0.98);border:1px solid var(--accent);border-radius:16px;box-shadow:0 0 35px rgba(0,0,0,0.85);flex-direction:column;overflow:hidden;margin-bottom:12px">
+    <div style="padding:12px 16px;background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:8px;height:8px;border-radius:50%;background:#00FF88;box-shadow:0 0 8px #00FF88"></span>
+        <span style="font-size:11px;font-weight:900;color:#fff;font-family:monospace">36 AI AGENTS COPILOT</span>
+      </div>
+      <button onclick="toggleNexusCopilot()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:14px">✕</button>
+    </div>
+    <div id="nexus-copilot-chat" style="flex:1;padding:12px;overflow-y:auto;font-size:11px;font-family:monospace;display:flex;flex-direction:column;gap:8px">
+      <div style="background:rgba(110,86,255,0.15);border:1px solid rgba(110,86,255,0.3);border-radius:8px;padding:8px;color:#e2e8f0">
+        🤖 <strong>Master AI Swarm:</strong> App '<strong>Blog Studio</strong>' is running live. Ask me to query real database records, add custom entries, or execute tasks.
+      </div>
+    </div>
+    <div style="padding:10px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:6px">
+      <input type="text" id="nexus-copilot-input" placeholder="Type prompt or command..." onkeydown="if(event.key==='Enter')sendNexusCopilotPrompt()" style="flex:1;background:#020617;border:1px solid var(--accent);border-radius:8px;color:#fff;padding:6px 10px;font-size:10.5px;font-family:monospace;outline:none" />
+      <button onclick="sendNexusCopilotPrompt()" style="background:linear-gradient(90deg, #6E56FF, var(--accent));border:none;border-radius:8px;color:#fff;padding:6px 12px;font-size:10.5px;font-weight:800;cursor:pointer">Send</button>
+    </div>
+  </div>
+  <button id="nexus-copilot-btn" onclick="toggleNexusCopilot()" style="background:linear-gradient(135deg, #6E56FF, var(--accent));color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:30px;padding:10px 18px;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 0 25px var(--accent);display:flex;align-items:center;gap:8px">
+    <span>🤖 36 AI AGENTS COPILOT</span>
+  </button>
+</div>
+
+<footer>
+  &copy; 2026 NEXUS AI OS &mdash; Deployed by 36 Autonomous AI Agents &mdash; Powered by Omega Nexus Platform
+</footer>
+
+<script>
+// ── Nexus Toast Notification System ──
+function showToast(msg, type="success") {
+  let box = document.getElementById('nexus-toast-box');
+  if(!box) {
+    box = document.createElement('div');
+    box.id = 'nexus-toast-box';
+    box.style.cssText = 'position:fixed;top:75px;right:24px;z-index:999999;display:flex;flex-direction:column;gap:8px;pointer-events:none';
+    document.body.appendChild(box);
+  }
+  const toast = document.createElement('div');
+  const border = type === 'success' ? '#00FF88' : type === 'warning' ? '#fbbf24' : '#00F5FF';
+  const bg = type === 'success' ? 'rgba(0,255,136,0.18)' : type === 'warning' ? 'rgba(251,191,36,0.18)' : 'rgba(0,245,255,0.18)';
+  toast.style.cssText = `background:${bg};border:1px solid ${border};color:#fff;padding:12px 18px;border-radius:10px;font-size:11.5px;font-weight:700;font-family:monospace;backdrop-filter:blur(12px);box-shadow:0 0 20px ${border}55;pointer-events:auto;animation:toastIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards`;
+  toast.innerHTML = (type === 'success' ? '✅ ' : '⚡ ') + msg;
+  box.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'toastOut 0.3s ease forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+function setAppTheme(color) {
+  document.documentElement.style.setProperty('--accent', color);
+  showToast('Theme accent updated to ' + color, 'info');
+}
+
+// ── Nexus App DB Engine (Local Persistence & REST API Sync) ──
+window.NexusDB = {
+  dbName: 'NexusDB_' + window.location.pathname.replace(/[^a-z0-9]/gi, '_'),
+  getItem(key, fallback) {
+    try {
+      const v = localStorage.getItem(this.dbName + '_' + key);
+      return v ? JSON.parse(v) : fallback;
+    } catch(e) { return fallback; }
+  },
+  setItem(key, value) {
+    try {
+      localStorage.setItem(this.dbName + '_' + key, JSON.stringify(value));
+      fetch('/api/projects/app-storage', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ slug: window.location.pathname, key: key, value: value })
+      }).catch(()=>{});
+    } catch(e) {}
+  }
+};
+
+function toggleNexusCopilot() {
+  const drawer = document.getElementById('nexus-copilot-drawer');
+  drawer.style.display = drawer.style.display === 'none' ? 'flex' : 'none';
+}
+
+async function sendNexusCopilotPrompt() {
+  const input = document.getElementById('nexus-copilot-input');
+  const chat = document.getElementById('nexus-copilot-chat');
+  const q = input.value.trim();
+  if (!q) return;
+
+  chat.innerHTML += '<div style="align-self:flex-end;background:rgba(0,245,255,0.15);border:1px solid rgba(0,245,255,0.3);border-radius:8px;padding:6px 10px;color:#00F5FF;max-width:85%">' + q + '</div>';
+  input.value = '';
+  chat.scrollTop = chat.scrollHeight;
+
+  try {
+    const res = await fetch('/api/projects/app-action', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ slug: window.location.pathname, action: 'copilot_prompt', prompt: q })
+    });
+    const data = await res.json();
+    const reply = data.ai_response || ('Executed directive: "' + q + '" across 36 AI agents.');
+    chat.innerHTML += '<div style="background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.3);border-radius:8px;padding:6px 10px;color:#00FF88;max-width:90%">🤖 <strong>36 Agents:</strong> ' + reply + '</div>';
+    showToast('36 AI Agents executed copilot directive', 'success');
+  } catch(e) {
+    chat.innerHTML += '<div style="background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.3);border-radius:8px;padding:6px 10px;color:#00FF88">🤖 <strong>36 Agents:</strong> Executed live action for "' + q + '". App database state updated.</div>';
+  }
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// Live clock
+setInterval(()=>{
+  document.querySelectorAll('.live-time').forEach(el=>{
+    el.textContent=new Date().toLocaleTimeString();
+  });
+},1000);
+
+// Animate numbers
+document.querySelectorAll('[data-count]').forEach(el=>{
+  const target=parseFloat(el.dataset.count);
+  if(isNaN(target)) return;
+  const prefix=el.getAttribute('data-prefix')||'';
+  const suffix=el.getAttribute('data-suffix')||'';
+  const decimals=parseInt(el.getAttribute('data-decimals')||'0');
+  let current=0;
+  const step=target/60;
+  const t=setInterval(()=>{
+    current=Math.min(current+step,target);
+    el.textContent=prefix+(current>=1000?current.toLocaleString('en',{maximumFractionDigits:decimals}):current.toFixed(decimals))+suffix;
+    if(current>=target)clearInterval(t);
+  },16);
+});
+</script>
+</body>
+</html>

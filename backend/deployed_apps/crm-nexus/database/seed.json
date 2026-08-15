@@ -1,0 +1,17 @@
+[
+  {
+    "id": "1",
+    "title": "Nexus Robotics Corp",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "2",
+    "title": "Cyberdyne Systems",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "3",
+    "title": "Aperture Science",
+    "status": "ACTIVE"
+  }
+]

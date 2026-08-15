@@ -1,0 +1,14 @@
+[
+  {
+    "id": "f87cb1ff-0367-4298-8fd3-6e1931125f5a",
+    "title": "Verify chatbot functionalities",
+    "description": "Test the chatbot response capabilities.",
+    "status": "pending",
+    "priority": "high",
+    "agent": "planner",
+    "progress": 0,
+    "created_at": "2026-06-30T16:21:27.210686+00:00",
+    "updated_at": "2026-06-30T16:21:27.210686+00:00",
+    "_id": "bf17ec13-ffd4-4966-8c66-7b015286d0b6"
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": "1",
+    "title": "Autonomous Drone Controller Core Engine",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "2",
+    "title": "AI Telemetry Pipeline",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "3",
+    "title": "Security Cluster",
+    "status": "VERIFIED"
+  }
+]

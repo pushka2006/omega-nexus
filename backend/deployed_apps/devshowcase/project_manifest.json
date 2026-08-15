@@ -1,0 +1,57 @@
+{
+  "project_name": "DevShowcase",
+  "slug": "devshowcase",
+  "tier": "3-Tier Full-Stack (Frontend, Backend, Database)",
+  "generated_by": "36 Trained AI Agents (OMEGA NEXUS OS)",
+  "timestamp": "2026-08-06T17:57:30.389352",
+  "files": [
+    {
+      "path": "index.html",
+      "tier": "Frontend",
+      "language": "html",
+      "lines": 120
+    },
+    {
+      "path": "frontend/App.jsx",
+      "tier": "Frontend",
+      "language": "javascript",
+      "lines": 85
+    },
+    {
+      "path": "frontend/styles.css",
+      "tier": "Frontend",
+      "language": "css",
+      "lines": 95
+    },
+    {
+      "path": "backend/main.py",
+      "tier": "Backend",
+      "language": "python",
+      "lines": 54
+    },
+    {
+      "path": "backend/routes.py",
+      "tier": "Backend",
+      "language": "python",
+      "lines": 16
+    },
+    {
+      "path": "database/schema.sql",
+      "tier": "Database",
+      "language": "sql",
+      "lines": 22
+    },
+    {
+      "path": "database/models.py",
+      "tier": "Database",
+      "language": "python",
+      "lines": 23
+    },
+    {
+      "path": "database/seed.json",
+      "tier": "Database",
+      "language": "json",
+      "lines": 20
+    }
+  ]
+}

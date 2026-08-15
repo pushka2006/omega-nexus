@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.NexusDB = window.NexusDB || { dbName: 'NexusDB_' + window.location.pathname.replace(/[^a-z0-9]/gi, '_'), getItem(k, defval) { try { const v = localStorage.getItem(this.dbName + '_' + k); return v ? JSON.parse(v) : defval; } catch(e) { return defval; } }, setItem(k, val) { try { localStorage.setItem(this.dbName + '_' + k, JSON.stringify(val)); } catch(e) {} }, saveItem(k, val) { return this.setItem(k, val); } };</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Cyberpunk Quantum Gaming Hub — NEXUS AI OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--accent:#fbbf24;--bg:#030612;--surface:#080c26;--border:rgba(255,255,255,0.08)}
+body{background:var(--bg);color:#f8fafc;font-family:'Space Grotesk',sans-serif;min-height:100vh}
+.mono{font-family:'JetBrains Mono',monospace}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;font-family:monospace}
+.badge-green{background:rgba(0,255,136,.12);border:1px solid rgba(0,255,136,.35);color:#00FF88}
+.badge-blue{background:rgba(0,245,255,.12);border:1px solid rgba(0,245,255,.35);color:#00F5FF}
+.badge-purple{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35);color:#a855f7}
+.badge-amber{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);color:#fbbf24}
+.card{background:rgba(8,12,38,.9);border:1px solid var(--border);border-radius:14px;padding:18px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:9px;font-weight:700;font-size:12px;cursor:pointer;border:none;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:linear-gradient(90deg,#6E56FF,#fbbf24);color:#fff}
+.btn-outline{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:#e2e8f0}
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:rgba(3,6,18,.95);border-bottom:1px solid rgba(0,245,255,.15);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+nav .logo{display:flex;align-items:center;gap:10px}
+nav .logo-dot{width:8px;height:8px;border-radius:50%;background:#fbbf24;box-shadow:0 0 8px #fbbf24;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+footer{text-align:center;padding:20px;font-size:10px;color:#475569;font-family:monospace;border-top:1px solid rgba(255,255,255,.05);margin-top:40px}
+
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <span style="font-weight:900;font-size:15px;letter-spacing:.04em">Cyberpunk Quantum Gaming Hub</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span class="badge badge-green">🟢 LIVE</span>
+    <span class="badge badge-blue mono">NEXUS AI OS</span>
+    <span class="badge badge-purple">36 AI AGENTS</span>
+  </div>
+</nav>
+
+<div style="max-width:1200px;margin:0 auto;padding:24px">
+  <div style="display:grid;grid-template-columns:1fr 300px;gap:20px">
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <h1 style="font-size:24px;font-weight:900;color:#fbbf24">📈 AI Algorithmic Trading Terminal</h1>
+          <p style="color:#64748b;font-size:11px;margin-top:3px">High-Frequency Momentum Arbitrage · 36 AI Agents · Real-time signals</p>
+        </div>
+        <div class="badge badge-green mono">MARKET OPEN</div>
+      </div>
+      <!-- Ticker Bar -->
+      <div class="card" style="display:flex;gap:24px;margin-bottom:16px;overflow-x:auto;padding:12px 16px">
+        <span class="mono" style="font-size:11px;color:#64748b">LIVE TICKERS</span>
+        <span class="mono" style="font-size:11px">BTC/USD <span style="color:#00FF88">$94,450 ▲4.2%</span></span>
+        <span class="mono" style="font-size:11px">ETH/USD <span style="color:#00FF88">$3,420 ▲3.8%</span></span>
+        <span class="mono" style="font-size:11px">NVDA <span style="color:#00FF88">$138.20 ▲2.1%</span></span>
+        <span class="mono" style="font-size:11px">NIFTY50 <span style="color:#00FF88">24,850 ▲0.9%</span></span>
+        <span class="mono" style="font-size:11px">SENSEX <span style="color:#00FF88">81,200 ▲1.1%</span></span>
+        <span class="mono" style="font-size:11px">USD/INR <span style="color:#ef4444">₹83.42 ▼0.2%</span></span>
+      </div>
+      <!-- Candle Chart -->
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+          <span style="font-weight:800;font-size:13px">BTC/USD — 1m Chart</span>
+          <span class="mono" style="font-size:10px;color:#fbbf24">PnL Today: +$45,320</span>
+        </div>
+        <div id="chart" style="height:180px;display:flex;align-items:flex-end;gap:3px;padding:8px 0"></div>
+      </div>
+      <!-- Trade Log -->
+      <div class="card">
+        <div style="font-weight:800;font-size:12px;margin-bottom:10px;font-family:monospace">LIVE EXECUTION LOG</div>
+        <div id="trade-log" style="font-size:10px;font-family:monospace;color:#34d399;line-height:1.9;max-height:180px;overflow-y:auto"></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div style="font-size:11px;color:#64748b;font-family:monospace">PORTFOLIO VALUE</div>
+        <div style="font-size:28px;font-weight:900;color:#fbbf24;margin-top:4px">$<span data-count="284750" data-prefix="" data-suffix=""></span></div>
+        <div style="font-size:10px;color:#00FF88;margin-top:4px">↑ +$45,320 today</div>
+      </div>
+      <div class="card">
+        <div style="font-size:11px;color:#64748b;font-family:monospace;margin-bottom:10px">AI STRATEGY</div>
+        <div style="font-size:11px;line-height:1.7;color:#94a3b8;font-family:monospace">Strategy: HF Momentum<br>Win Rate: <span style="color:#00FF88">91.4%</span><br>Sharpe Ratio: <span style="color:#00FF88">3.84</span><br>Max Drawdown: <span style="color:#ef4444">-2.1%</span></div>
+      </div>
+      <button class="btn btn-primary" onclick="executeTrade()" style="width:100%;justify-content:center;padding:12px">⚡ Execute AI Signal</button>
+      <button class="btn btn-outline" onclick="toggleBot()" id="bot-btn" style="width:100%;justify-content:center">⏸ Pause AI Bot</button>
+    </div>
+  </div>
+</div>
+<script>
+const bars=[40,62,55,80,75,92,85,110,100,132,125,162,148,185,175,192,180,210,198,220];
+document.getElementById('chart').innerHTML=bars.map((h,i)=>`
+  <div style="flex:1;height:${h}px;background:${i%3===0?'#ef4444':i%2===0?'#fbbf24':'#00FF88'};border-radius:2px;opacity:.85"></div>
+`).join('');
+const logs=[
+  'BUY  2.5 BTC @ $94,420 — Momentum signal confirmed',
+  'SELL 1.8 ETH @ $3,418 — Profit: +$1,240.00',
+  'BUY  120 NVDA @ $137.80 — Breakout detected',
+  'ARB  BTC spread captured +$340 cross-exchange',
+  'SELL 2.5 BTC @ $94,450 — Profit: +$75.00',
+];
+let li=0;
+function addLog(){
+  const el=document.getElementById('trade-log');
+  const t=new Date().toLocaleTimeString();
+  el.innerHTML=`<div>[${t}] ${logs[li%logs.length]}</div>`+el.innerHTML;
+  li++;
+}
+setInterval(addLog,2200);addLog();
+function executeTrade(){
+  const amt=(Math.random()*3+0.5).toFixed(2);
+  alert('✅ AI Trade Executed!\n\nBUY '+amt+' BTC @ $94,'+Math.floor(Math.random()*100+400)+'\nOrder ID: ORD_'+Math.random().toString(36).slice(2,10).toUpperCase()+'\nStatus: FILLED • 0.004s execution');
+}
+let botRunning=true;
+function toggleBot(){
+  botRunning=!botRunning;
+  document.getElementById('bot-btn').textContent=botRunning?'⏸ Pause AI Bot':'▶ Resume AI Bot';
+}
+</script>
+<footer>
+  &copy; 2026 NEXUS AI OS &mdash; Deployed by 36 Autonomous AI Agents &mdash; Powered by Omega Nexus Platform
+</footer>
+<script>
+// Live clock
+setInterval(()=>{
+  document.querySelectorAll('.live-time').forEach(el=>{
+    el.textContent=new Date().toLocaleTimeString();
+  });
+},1000);
+// Animate numbers
+document.querySelectorAll('[data-count]').forEach(el=>{
+  const target=parseFloat(el.dataset.count);
+  if(isNaN(target)) return;
+  const prefix=el.getAttribute('data-prefix')||'';
+  const suffix=el.getAttribute('data-suffix')||'';
+  const decimals=parseInt(el.getAttribute('data-decimals')||'0');
+  let current=0;
+  const step=target/60;
+  const t=setInterval(()=>{
+    current=Math.min(current+step,target);
+    el.textContent=prefix+(current>=1000?current.toLocaleString('en',{maximumFractionDigits:decimals}):current.toFixed(decimals))+suffix;
+    if(current>=target)clearInterval(t);
+  },16);
+});
+</script>
+</body>
+</html>
