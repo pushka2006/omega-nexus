@@ -1,5 +1,6 @@
 """
 Rebuild all 42 applications with the Ultra-Tier Industry Engine.
+Synchronizes to backend deployed_apps, frontend public/apps, public/deployed, build/apps, and build/deployed.
 """
 
 import sys
@@ -14,7 +15,9 @@ from app.core.ultra_industry_engine import generate_ultra_industry_app
 BASE_DIR = Path(r"c:\Users\Pushkar\OneDrive\Documents\omega nexus")
 DEPLOYED_APPS_DIR = BASE_DIR / "backend" / "deployed_apps"
 PUBLIC_APPS_DIR = BASE_DIR / "frontend" / "public" / "apps"
+PUBLIC_DEPLOYED_DIR = BASE_DIR / "frontend" / "public" / "deployed"
 BUILD_APPS_DIR = BASE_DIR / "frontend" / "build" / "apps"
+BUILD_DEPLOYED_DIR = BASE_DIR / "frontend" / "build" / "deployed"
 
 def main():
     app_dirs = [d for d in DEPLOYED_APPS_DIR.iterdir() if d.is_dir()]
@@ -30,13 +33,13 @@ def main():
         with open(index_file, "w", encoding="utf-8") as f:
             f.write(html_content)
 
-        # Copy to frontend public and build directories
-        for target_base in [PUBLIC_APPS_DIR, BUILD_APPS_DIR]:
+        # Copy to frontend public and build directories (both /apps and /deployed)
+        for target_base in [PUBLIC_APPS_DIR, PUBLIC_DEPLOYED_DIR, BUILD_APPS_DIR, BUILD_DEPLOYED_DIR]:
             dest_dir = target_base / slug
             dest_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy2(index_file, dest_dir / "index.html")
 
-    print(f"[SUCCESS] Successfully generated and synchronized all {len(app_dirs)} Ultra-Tier Industry Applications!")
+    print(f"[SUCCESS] Successfully generated and synchronized all {len(app_dirs)} Ultra-Tier Industry Applications across apps and deployed routes!")
 
 if __name__ == "__main__":
     main()

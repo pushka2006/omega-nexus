@@ -44,17 +44,18 @@ export default function LiveAppViewer() {
   const currentSlug = (slug || "").toLowerCase();
   
   // Real Multi-Cloud Deployment URL Resolution
-  const [activeCloudProvider, setActiveCloudProvider] = useState("render");
+  const [activeCloudProvider, setActiveCloudProvider] = useState("vercel");
   const [deviceViewport, setDeviceViewport] = useState("desktop"); // 'desktop' | 'tablet' | 'mobile'
   const [deployingCloud, setDeployingCloud] = useState(false);
   const [liveHealth, setLiveHealth] = useState({ status: "200 OK Live", latency: 1.4, ssl: true });
   
   const getDeployedUrl = (provider) => {
     if (provider === "surge") return `https://${currentSlug}.surge.sh`;
-    if (provider === "vercel") return `https://omega-nexus-chi.vercel.app/live-app/${currentSlug}`;
-    if (provider === "github") return `https://pushka2006.github.io/omega-nexus/apps/${currentSlug}/`;
+    if (provider === "vercel") return `/apps/${currentSlug}/index.html`;
+    if (provider === "github") return `https://pushka2006.github.io/omega-nexus/apps/${currentSlug}/index.html`;
     if (provider === "netlify") return `https://nexus-${currentSlug}.netlify.app`;
-    return `https://omega-nexus-backend.onrender.com/deployed/${currentSlug}/index.html`;
+    if (provider === "render") return `https://omega-nexus-backend.onrender.com/deployed/${currentSlug}/index.html`;
+    return `/apps/${currentSlug}/index.html`;
   };
 
   const deployedUrl = getDeployedUrl(activeCloudProvider);

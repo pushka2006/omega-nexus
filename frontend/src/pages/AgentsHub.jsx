@@ -633,7 +633,7 @@ function WebsiteBuilderTrainingPanel({ externalSelectedAgent, onSelectAgent }) {
                   <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 4 }}>🎉 Web Application Researched & Deployed Live!</div>
                   <div style={{ fontSize: 11, fontFamily: "monospace" }}>Project: <strong>{generatedResult.project?.name || generatedResult.project_name || "Custom Web Application"}</strong> | Status: 200 OK Live</div>
                   <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
-                    <a href={generatedResult.deployment_url || generatedResult.live_url || `http://localhost:8000/deployed/${generatedResult.slug}/`} target="_blank" rel="noreferrer"
+                    <a href={generatedResult.slug ? `/apps/${generatedResult.slug}/index.html` : (generatedResult.deployment_url || generatedResult.live_url || "#")} target="_blank" rel="noreferrer"
                       style={{ padding: "6px 14px", borderRadius: 6, background: "#00FF88", color: "#020617", fontSize: 11, fontWeight: 900, textDecoration: "none" }}>
                       🌐 Open Live Site
                     </a>

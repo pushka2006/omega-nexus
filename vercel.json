@@ -3,17 +3,17 @@
   "buildCommand": "cd frontend && npm install && CI=false npm run build",
   "outputDirectory": "frontend/build",
   "framework": "create-react-app",
-  "env": {
-    "CI": "false"
-  },
-  "build": {
-    "env": {
-      "CI": "false"
-    }
-  },
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/deployed/:path*",
+      "destination": "/apps/:path*"
+    },
+    {
+      "source": "/apps/:path*",
+      "destination": "/apps/:path*"
+    },
+    {
+      "source": "/((?!apps/|deployed/|static/|assets/|favicon\\.ico|manifest\\.json|robots\\.txt).*)",
       "destination": "/index.html"
     }
   ]

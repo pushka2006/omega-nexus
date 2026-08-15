@@ -23,7 +23,9 @@ logger = logging.getLogger("nexus.web_enhanced_generator")
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DEPLOYED_APPS_DIR = BASE_DIR / "deployed_apps"
 PUBLIC_APPS_DIR = BASE_DIR.parent / "frontend" / "public" / "apps"
+PUBLIC_DEPLOYED_DIR = BASE_DIR.parent / "frontend" / "public" / "deployed"
 BUILD_APPS_DIR = BASE_DIR.parent / "frontend" / "build" / "apps"
+BUILD_DEPLOYED_DIR = BASE_DIR.parent / "frontend" / "build" / "deployed"
 
 def slugify(text: str) -> str:
     s = re.sub(r'[^a-zA-Z0-9\s-]', '', text).strip().lower()
@@ -91,8 +93,8 @@ async def research_and_generate_project(
     with open(index_file, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    # Copy to frontend public and build directories
-    for target_base in [PUBLIC_APPS_DIR, BUILD_APPS_DIR]:
+    # Copy to frontend public and build directories (both apps and deployed)
+    for target_base in [PUBLIC_APPS_DIR, PUBLIC_DEPLOYED_DIR, BUILD_APPS_DIR, BUILD_DEPLOYED_DIR]:
         dest_dir = target_base / slug
         dest_dir.mkdir(parents=True, exist_ok=True)
         with open(dest_dir / "index.html", "w", encoding="utf-8") as f:
@@ -107,7 +109,7 @@ async def research_and_generate_project(
         "built_by_agent": agent_name,
         "research_sources_count": len(unique_sources),
         "extracted_features": extracted_features,
-        "deployment_url": f"/deployed/{slug}/",
+        "deployment_url": f"/apps/{slug}/index.html",
         "live_viewer_url": f"/live/{slug}",
         "cloud_url": f"https://omega-nexus-backend.onrender.com/deployed/{slug}/index.html",
         "gh_pages_url": f"https://pushka2006.github.io/omega-nexus/apps/{slug}/index.html",
@@ -127,10 +129,11 @@ async def research_and_generate_project(
         "agent": agent_name,
         "web_research_sources": unique_sources[:5],
         "extracted_features": extracted_features,
-        "deployment_url": f"http://localhost:8000/deployed/{slug}/",
-        "live_url": f"/deployed/{slug}/",
+        "deployment_url": f"/apps/{slug}/index.html",
+        "live_url": f"/apps/{slug}/index.html",
         "live_viewer_url": f"/live/{slug}",
         "cloud_url": f"https://omega-nexus-backend.onrender.com/deployed/{slug}/index.html",
+        "gh_pages_url": f"https://pushka2006.github.io/omega-nexus/apps/{slug}/index.html",
         "http_status": "200 OK Live",
         "created_at": datetime.utcnow().isoformat()
     }
