@@ -290,3 +290,6 @@ def collect_real_business_intelligence() -> Dict[str, Any]:
             "decisions_impacted": f"{max(96 + project_count, 50)} Today"
         }
     }
+
+collect_real_business_metrics = collect_real_business_intelligence
+
