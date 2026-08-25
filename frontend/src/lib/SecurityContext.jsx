@@ -18,21 +18,24 @@ export function SecurityProvider({ children }) {
   const [hasRegisteredFace, setHasRegisteredFace] = useState(false);
   const [pendingAction, setPendingAction] = useState(null); // { callback }
   const [isPromptOpen, setIsPromptOpen] = useState(false);
+  const [licenseInfo, setLicenseInfo] = useState({ valid: true, author: "Pushkar", project: "OMEGA NEXUS AI OS" });
 
   const inactivityTimerRef = useRef(null);
 
-  // Fetch settings & check if faces are registered
+  // Fetch settings & check if faces are registered and license is verified
   const fetchSecurityStatus = useCallback(async () => {
     try {
-      const [settRes, sigRes] = await Promise.all([
-        http.get("/biometrics/settings"),
-        http.get("/biometrics/signatures"),
+      const [settRes, sigRes, licRes] = await Promise.all([
+        http.get("/biometrics/settings").catch(() => ({ data: {} })),
+        http.get("/biometrics/signatures").catch(() => ({ data: [] })),
+        http.get("/license/status").catch((err) => ({ data: { valid: false, error: err?.response?.data || "UNAUTHORIZED" } })),
       ]);
-      setSettings(settRes.data);
-      setHasRegisteredFace(sigRes.data.length > 0);
+      if (settRes.data) setSettings(settRes.data);
+      if (sigRes.data) setHasRegisteredFace(sigRes.data.length > 0);
+      if (licRes.data) setLicenseInfo(licRes.data);
       
       // If biometrics are enabled and no face is registered, display a warning toast
-      if (settRes.data.enabled && sigRes.data.length === 0) {
+      if (settRes.data?.enabled && sigRes.data?.length === 0) {
         toast.warning("Biometric lock is active but no face is registered! Please register your face.");
       }
     } catch (err) {
@@ -146,6 +149,7 @@ export function SecurityProvider({ children }) {
         hasRegisteredFace,
         isPromptOpen,
         pendingActionName: pendingAction?.actionName || "",
+        licenseInfo,
         lockSystem,
         unlockSystem,
         updateSettings,

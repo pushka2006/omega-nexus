@@ -136,6 +136,12 @@ Multi-tier memory spanning short-term, long-term, semantic, episodic, project, a
 - System can be paused/resumed at any time
 - Every action includes explainability reports
 
-## License
+## License & Copyright
 
-Proprietary – OMEGA NEXUS AI OS
+**Proprietary & Confidential** — Copyright © 2026 Pushkar ([@pushka2006](https://github.com/pushka2006)). All Rights Reserved.
+
+This software, source code, architecture, and associated assets are strictly proprietary. 
+- **No unauthorized copying, cloning, redistribution, modification, or commercial use** is permitted without prior express written authorization from Pushkar.
+- This license is **non-removable** and applies **retroactively** to all past and present versions and downloads.
+- For complete terms and licensing inquiries, refer to the full [LICENSE](LICENSE) agreement or contact `pushkarbalyan14@gmail.com`.
+

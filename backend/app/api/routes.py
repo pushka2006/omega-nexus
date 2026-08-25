@@ -28,6 +28,7 @@ from app.core.deploy_engine import (
 from app.core.stock_fetcher import (
     fetch_yahoo_chart_data, fetch_real_stock_dashboard, predict_stock_ai_trend, fetch_multiple_charts_parallel
 )
+from app.core.license_guard import verify_license_integrity, enforce_license_at_startup
 
 router = APIRouter()
 
@@ -37,6 +38,16 @@ router = APIRouter()
 async def health_check():
     import time
     return {"status": "ok", "timestamp": int(time.time()), "service": "NEXUS AI OS Backend", "agents": 36}
+
+
+# ── License & Proprietary Integrity Endpoints ────────────────────────────────
+@router.get("/license/status")
+@router.get("/license/verify")
+async def get_license_status():
+    report = verify_license_integrity()
+    if not report.get("valid"):
+        raise HTTPException(status_code=403, detail=report)
+    return report
 
 
 # ── Request Models ───────────────────────────────────────────────────────────

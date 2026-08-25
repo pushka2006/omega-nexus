@@ -5733,6 +5733,7 @@ from fastapi.staticfiles import StaticFiles
 from app.api.routes import router as v1_router
 from app.core.agent_trainer import agent_trainer
 from app.core.deploy_engine import DEPLOYED_APPS_DIR
+from app.core.license_guard import enforce_license_at_startup
 
 os.makedirs(DEPLOYED_APPS_DIR, exist_ok=True)
 app.mount("/deployed", StaticFiles(directory=str(DEPLOYED_APPS_DIR), html=True), name="deployed")
@@ -5766,6 +5767,8 @@ logger = logging.getLogger("nexus")
 @app.on_event("startup")
 async def startup_db_init():
     """Ensure SQLite real data store is initialized, 360 real agent tasks seeded, and 36-agent trainer started."""
+    # Enforce Proprietary License Integrity Check
+    enforce_license_at_startup(strict=True)
     try:
         tasks_count = await db.tasks.count_documents({})
         if tasks_count == 0:

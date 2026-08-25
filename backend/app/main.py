@@ -13,12 +13,15 @@ from app.api.routes import router
 
 settings = get_settings()
 from app.core.agent_trainer import agent_trainer
+from app.core.license_guard import enforce_license_at_startup
 
 logger = structlog.get_logger()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Enforce Proprietary License & Anti-Tamper Verification
+    enforce_license_at_startup(strict=True)
     logger.info("nexus.startup", version=settings.app_version)
     try:
         await connect_all()
