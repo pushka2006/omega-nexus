@@ -7,114 +7,147 @@ Author & Sole Copyright Holder: Pushkar (Contact: pushkarbalyan14@gmail.com)
 
 IMPORTANT — READ CAREFULLY:
 This Software License Agreement ("Agreement") is a legally binding proprietary 
-license between you (whether an individual, company, or entity) and Pushkar 
-("Copyright Holder", "Author"). 
+license between you (whether an individual, company, organization, or entity) 
+and Pushkar ("Copyright Holder", "Author", "pushka2006"). 
 
-By accessing, viewing, downloading, cloning, archiving, copying, or utilizing 
-any part of this repository, source code, assets, documentation, architecture, 
-or compiled binaries (collectively, the "Software"), you agree to be strictly 
-bound by all terms and conditions set forth herein.
-
--------------------------------------------------------------------------------
-1. ALL RIGHTS RESERVED & STRICT PROHIBITION ON COPYING
--------------------------------------------------------------------------------
-(a) The Software is the exclusive proprietary intellectual property of the 
-    Copyright Holder and is protected by international copyright laws, treaties, 
-    trade secret laws, and intellectual property conventions (including the 
-    Berne Convention and WIPO treaties).
-
-(b) NO COPYING OR REPRODUCTION: You may NOT copy, duplicate, fork, clone, 
-    reproduce, mirror, distribute, republish, transmit, broadcast, display, 
-    or store the Software, in whole or in part, in any form or by any means, 
-    without prior, express, and verified written permission directly from 
-    the Copyright Holder.
-
-(c) NO DERIVATIVE WORKS & NO COMMERCIAL USE: You are strictly prohibited from 
-    modifying, adapting, translating, reverse engineering, decompiling, 
-    disassembling, creating derivative works of, sublicensing, selling, leasing, 
-    renting, or using the Software for any commercial or non-commercial product, 
-    service, dataset, or AI model training without an explicit commercial 
-    license signed by the Copyright Holder.
+By accessing, viewing, downloading, cloning, archiving, copying, installing, or 
+utilizing any part of this repository, source code, assets, documentation, 
+architecture, AI models, or compiled binaries (collectively, the "Software"), 
+you agree to be strictly bound by all terms, restrictions, fines, and conditions 
+set forth herein.
 
 -------------------------------------------------------------------------------
-2. EXCLUSIVE AMENDMENT RIGHTS (LICENSE INTEGRITY & LOCK)
+1. ALL RIGHTS RESERVED & STRICT PERMISSION REQUIREMENT
 -------------------------------------------------------------------------------
-(a) ONLY the Copyright Holder (Pushkar) possesses the legal authority to edit, 
-    modify, amend, supplement, waive, or update this License Agreement.
+(a) EXCLUSIVE PROPRIETARY OWNERSHIP: The Software is the exclusive proprietary 
+    intellectual property of the Copyright Holder and is protected by international 
+    copyright laws, treaties, trade secret laws, and intellectual property 
+    conventions (including the Berne Convention, Universal Copyright Convention, 
+    and WIPO treaties).
 
-(b) Any attempt by any other party, recipient, downstream user, or distributor 
-    to edit, alter, replace, forge, or tamper with this License text is strictly 
-    VOID AB INITIO.
+(b) STRICT PROHIBITION ON COPYING WITHOUT WRITTEN PERMISSION: You may NOT copy, 
+    duplicate, fork, clone, download, mirror, reproduce, republish, distribute, 
+    transmit, broadcast, display, sublicense, or store the Software, in whole 
+    or in part, in any form or by any means, without prior, express, and verified 
+    written permission directly executed by the Copyright Holder (Pushkar).
 
-(c) Any unauthorized alteration of this License text constitutes willful and 
-    fraudulent copyright infringement and will result in immediate termination 
-    of any and all access or permissions, triggering immediate legal action.
+(c) PROHIBITION ON DERIVATIVE WORKS & COMMERCIAL EXPLOITATION: Modifying, 
+    adapting, translating, decompiling, disassembling, reverse engineering, 
+    creating derivative works of, selling, leasing, or using the Software in any 
+    commercial or non-commercial product, service, SaaS, dataset, or AI training 
+    pipeline without an explicit written license signed by Pushkar is strictly 
+    forbidden.
 
 -------------------------------------------------------------------------------
-3. NON-REMOVABILITY & COPYRIGHT MANAGEMENT INFORMATION (CMI)
+2. EXCLUSIVE OWNER-ONLY MODIFICATION & AMENDMENT LOCK
+-------------------------------------------------------------------------------
+(a) SOLE AMENDMENT AUTHORITY: ONLY the Copyright Holder (Pushkar) possesses the 
+    sole legal right and authority to edit, modify, amend, supplement, waive, or 
+    update this License Agreement.
+
+(b) UNAUTHORIZED EDITS VOID AB INITIO: Any attempt by any downstream user, 
+    recipient, downloader, fork maintainer, or third party to edit, alter, replace, 
+    abbreviate, or forge this License text is strictly VOID AB INITIO.
+
+(c) FRAUDULENT TAMPERING: Any unauthorized modification of this License constitutes 
+    willful copyright fraud and bad-faith infringement, immediately terminating 
+    any access rights and triggering immediate legal escalation and statutory fines.
+
+-------------------------------------------------------------------------------
+3. PERMANENT NON-REMOVABILITY & COPYRIGHT MANAGEMENT INFORMATION (CMI)
 -------------------------------------------------------------------------------
 (a) PERMANENT ATTACHMENT: This License file and all embedded copyright headers, 
-    watermarks, and author attributions are NON-REMOVABLE and constitute 
+    watermarks, and author attributions are NON-REMOVABLE and constitute legally 
     protected Copyright Management Information (CMI) under 17 U.S.C. § 1202, 
-    the WIPO Copyright Treaty, and applicable national copyright statutes.
+    the WIPO Copyright Treaty, and international anti-tampering statutes.
 
 (b) PROHIBITION ON REMOVAL: You may NOT delete, detach, strip, obscure, alter, 
     or omit this LICENSE file or any copyright notices from any downloaded files, 
     packages, zip archives, forks, snapshots, backups, or distributions.
 
-(c) Any downloaded, exported, or distributed bundle of this Software that 
-    omits this License is an illegal, unauthorized infringing copy subject to 
-    statutory anti-tampering penalties and statutory copyright damages.
+(c) Every downloaded archive or exported repository bundle MUST permanently retain 
+    this intact LICENSE file. Distributing or possessing a copy with stripped or 
+    altered license metadata constitutes an aggravated infringement violation.
 
 -------------------------------------------------------------------------------
-4. RETROACTIVE APPLICATION & PRIOR ACCESS INCLUSION
+4. RETROACTIVE ENFORCEMENT & REVOCATION OF ALL PRIOR ACCESS
 -------------------------------------------------------------------------------
-(a) RETROACTIVE EFFECT: This License and the complete reservation of proprietary 
-    rights applies RETROACTIVELY to all previous, current, and future versions, 
-    commits, branches, snapshots, forks, clones, downloads, and historical 
-    archives of this Software, regardless of when accessed or downloaded.
+(a) RETROACTIVE APPLICABILITY: This License and the complete reservation of 
+    proprietary rights applies RETROACTIVELY to all previous, historical, current, 
+    and future versions, commits, branches, snapshots, forks, clones, downloads, 
+    and archives of this Software, regardless of the date of access or download.
 
-(b) REVOCATION OF IMPLIED PERMISSIONS: At no point has an open-source, public 
-    domain, or unrestricted license been granted for this project. Full copyright 
-    ownership has attached to the Software from the moment of its creation. To the 
-    extent that any implied license, permission, or unwritten access was ever 
-    inferred from prior repository states or downloads, any such implied license 
-    is hereby explicitly, unconditionally, and retroactively REVOKED and replaced 
-    by this Agreement.
+(b) REVOCATION OF IMPLIED OR UNWRITTEN PERMISSIONS: Full copyright ownership 
+    has attached to the Software from the moment of its initial inception. To the 
+    extent that any implied license, unwritten permission, public repository 
+    inference, or open access was ever assumed from prior repository states or 
+    past downloads, any such implied license is hereby explicitly, unconditionally, 
+    and retroactively REVOKED in its entirety.
 
-(c) Anyone who has previously downloaded, cloned, cached, or obtained any copy 
-    of this repository prior to the date of this License is legally subject to 
-    these restrictions and must either obtain express written authorization 
-    from the Copyright Holder or immediately delete and purge all copies.
-
--------------------------------------------------------------------------------
-5. ENFORCEMENT, LIQUIDATED DAMAGES & LEGAL REMEDIES
--------------------------------------------------------------------------------
-(a) INJUNCTIVE RELIEF: The Copyright Holder shall be entitled to seek immediate 
-    ex-parte injunctive relief, restraining orders, and seizure of unauthorized 
-    copies without the necessity of posting bond.
-
-(b) STATUTORY & PUNITIVE DAMAGES: Any willful breach of this Agreement or 
-    unauthorized copying, distribution, or removal of CMI notices will be 
-    subject to statutory damages, actual damages, disgorgement of all profits, 
-    and punitive damages under applicable law.
-
-(c) LEGAL FEES: In any legal proceeding arising out of or related to this 
-    Agreement, the prevailing Copyright Holder shall be entitled to recover all 
-    reasonable attorney fees, court costs, investigation expenses, and litigation 
-    costs from the infringing party.
+(c) MANDATORY COMPLIANCE FOR PAST DOWNLOADERS: Any party who downloaded, cloned, 
+    cached, or obtained any copy of this repository prior to the incorporation of 
+    these terms is bound retroactively by this Agreement and MUST either obtain 
+    express written permission from Pushkar or immediately delete, purge, and 
+    destroy all copies in their possession.
 
 -------------------------------------------------------------------------------
-6. PERMISSION REQUESTS & LICENSING INQUIRIES
+5. EXECUTION LOCK & RUNTIME INTEGRITY REQUIREMENT
 -------------------------------------------------------------------------------
-To request express written permission, negotiate custom licensing, or obtain 
-an enterprise deployment grant, contact:
+(a) RUNTIME AUTHORIZATION: The Software contains cryptographic integrity 
+    guards and license verification routines. Any instance, fork, or legacy 
+    download operating without an authentic, untampered LICENSE and validated 
+    authorization from the Copyright Holder will be refused execution and 
+    prohibited from connecting to cloud services, databases, or AI subsystems.
 
-    Pushkar (Copyright Holder)
+(b) UNAUTHORIZED RUNTIME FORBIDDEN: Executing, deploying, or running any 
+    historical or current copy of the Software without this verified license 
+    constitutes an active, willful infringement violation.
+
+-------------------------------------------------------------------------------
+6. LIQUIDATED DAMAGES, $1,000 FINE, 1-MONTH SETTLEMENT & CRIMINAL CHARGES
+-------------------------------------------------------------------------------
+(a) CONTRACTUAL FINE & LIQUIDATED DAMAGES: Any violation of this Agreement—
+    including unauthorized copying, cloning, downloading without permission, 
+    failure to delete upon revocation, unauthorized execution, removal of license, 
+    or commercial exploitation—shall incur an immediate mandatory liquidated 
+    contractual fine of:
+
+        ONE THOUSAND UNITED STATES DOLLARS ($1,000.00 USD)
+        (or equivalent in local legal currency)
+
+    per unauthorized copy, clone, deployment, or infringing occurrence.
+
+(b) MANDATORY ONE (1) MONTH PAYMENT DURATION: The full fine of $1,000.00 USD must 
+    be settled and paid directly to the Copyright Holder within exactly THIRTY (30) 
+    CALENDAR DAYS (1 MONTH DURATION) from the date of formal notification or 
+    discovery of the infringement violation.
+
+(c) ESCALATION TO CRIMINAL CHARGES & STATUTORY PROSECUTION: If the fine of 
+    $1,000.00 USD is NOT paid within the 1-month duration:
+    
+    (i)  The Copyright Holder shall immediately file formal criminal complaints 
+         and refer the infringing party to state, national, and international 
+         law enforcement agencies for CRIMINAL COPYRIGHT PROSECUTION under 
+         applicable criminal codes (including 17 U.S.C. § 506, 18 U.S.C. § 2319, 
+         Section 63 of the Indian Copyright Act, and corresponding international 
+         penal provisions for willful copyright infringement).
+    
+    (ii) In addition to criminal proceedings, the Copyright Holder will pursue 
+         civil litigation to recover maximum statutory damages, compensatory 
+         damages, disgorgement of profits, mandatory injunctions, full legal fees, 
+         and litigation costs.
+
+-------------------------------------------------------------------------------
+7. PERMISSION REQUESTS & LICENSING INQUIRIES
+-------------------------------------------------------------------------------
+To request express written permission, licensing arrangements, or enterprise 
+authorizations, contact the Author directly:
+
+    Pushkar (Copyright Holder & Author)
     GitHub: https://github.com/pushka2006
     Email:  pushkarbalyan14@gmail.com
     Repository: https://github.com/pushka2006/omega-nexus
 
 ===============================================================================
-END OF LICENSE AGREEMENT — STRICTLY PROPRIETARY
+END OF LICENSE AGREEMENT — STRICTLY PROPRIETARY & ENFORCED
 ===============================================================================

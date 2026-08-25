@@ -1,5 +1,5 @@
 """OMEGA NEXUS AI OS — Core License & Anti-Tamper Integrity Guard.
-Enforces proprietary licensing, author attribution, and non-removability.
+Enforces proprietary licensing, author attribution, non-removability, fine liability, and criminal escalation.
 """
 import os
 import sys
@@ -14,16 +14,20 @@ AUTHOR_NAME = "Pushkar"
 AUTHOR_GITHUB = "pushka2006"
 AUTHOR_EMAIL = "pushkarbalyan14@gmail.com"
 PROJECT_NAME = "OMEGA NEXUS AI OS"
-EXPECTED_LICENSE_HASH = "ef5ea063b4a0efb04421f89ca38a9b6462889322cef652dfc6791b5fed8135c1"
+EXPECTED_LICENSE_HASH = "ecaf651c747e2958062b1efcab1528c843b4e5749368173638f533fe7b37d143"
+VIOLATION_PENALTY_AMOUNT = "$1,000.00 USD"
+PAYMENT_WINDOW_DURATION = "30 Days (1 Month)"
 
 REQUIRED_CLAUSES = [
     "PROPRIETARY SOURCE CODE & SOFTWARE LICENSE AGREEMENT",
     "Copyright (c) 2026 Pushkar (pushka2006)",
     "Author & Sole Copyright Holder: Pushkar (Contact: pushkarbalyan14@gmail.com)",
-    "ALL RIGHTS RESERVED & STRICT PROHIBITION ON COPYING",
-    "EXCLUSIVE AMENDMENT RIGHTS (LICENSE INTEGRITY & LOCK)",
-    "NON-REMOVABILITY & COPYRIGHT MANAGEMENT INFORMATION",
-    "RETROACTIVE APPLICATION & PRIOR ACCESS INCLUSION",
+    "ALL RIGHTS RESERVED & STRICT PERMISSION REQUIREMENT",
+    "EXCLUSIVE OWNER-ONLY MODIFICATION & AMENDMENT LOCK",
+    "PERMANENT NON-REMOVABILITY & COPYRIGHT MANAGEMENT INFORMATION",
+    "RETROACTIVE ENFORCEMENT & REVOCATION OF ALL PRIOR ACCESS",
+    "EXECUTION LOCK & RUNTIME INTEGRITY REQUIREMENT",
+    "LIQUIDATED DAMAGES, $1,000 FINE, 1-MONTH SETTLEMENT & CRIMINAL CHARGES",
 ]
 
 
@@ -52,7 +56,8 @@ def verify_license_integrity() -> Dict[str, Any]:
         msg = (
             f"[FATAL LICENSE ERROR] LICENSE file is missing from {lic_path}. "
             "This software is strictly proprietary to Pushkar (pushka2006). "
-            "Execution is forbidden without an intact LICENSE file."
+            f"Unauthorized possession/execution incurs a mandatory {VIOLATION_PENALTY_AMOUNT} fine "
+            f"payable within {PAYMENT_WINDOW_DURATION}, subject to immediate criminal charges."
         )
         logger.critical(msg)
         return {
@@ -61,6 +66,8 @@ def verify_license_integrity() -> Dict[str, Any]:
             "message": msg,
             "author": AUTHOR_NAME,
             "github": AUTHOR_GITHUB,
+            "fine_amount": VIOLATION_PENALTY_AMOUNT,
+            "payment_duration": PAYMENT_WINDOW_DURATION,
         }
 
     try:
@@ -81,7 +88,8 @@ def verify_license_integrity() -> Dict[str, Any]:
         msg = (
             f"[FATAL LICENSE ERROR] LICENSE file has been modified or corrupted. "
             f"Missing required proprietary clauses: {missing_clauses}. "
-            "Modifying or stripping the license terms is illegal."
+            f"Modifying or stripping the license terms is illegal and subject to a {VIOLATION_PENALTY_AMOUNT} fine "
+            f"and criminal copyright prosecution if unpaid in {PAYMENT_WINDOW_DURATION}."
         )
         logger.critical(msg)
         return {
@@ -90,6 +98,8 @@ def verify_license_integrity() -> Dict[str, Any]:
             "message": msg,
             "missing_clauses": missing_clauses,
             "author": AUTHOR_NAME,
+            "fine_amount": VIOLATION_PENALTY_AMOUNT,
+            "payment_duration": PAYMENT_WINDOW_DURATION,
         }
 
     file_hash = hashlib.sha256(content.encode("utf-8")).hexdigest().lower()
@@ -105,6 +115,9 @@ def verify_license_integrity() -> Dict[str, Any]:
         "sha256": file_hash,
         "retroactive_enforcement": True,
         "anti_tamper_active": True,
+        "fine_amount": VIOLATION_PENALTY_AMOUNT,
+        "payment_duration": PAYMENT_WINDOW_DURATION,
+        "criminal_escalation": "Enforceable under 17 U.S.C. § 506 / 18 U.S.C. § 2319 / Indian Copyright Act Sec 63",
     }
 
 
@@ -119,7 +132,8 @@ def enforce_license_at_startup(strict: bool = True):
         logger.critical("🛑 OMEGA NEXUS AI OS — PROPRIETARY LICENSE VIOLATION")
         logger.critical(result.get("message", "License validation failed."))
         logger.critical(f"Copyright Owner: {AUTHOR_NAME} (@{AUTHOR_GITHUB}) <{AUTHOR_EMAIL}>")
-        logger.critical("Unauthorized copying, execution, or distribution is prohibited by law.")
+        logger.critical(f"Violation Penalty: {VIOLATION_PENALTY_AMOUNT} payable within {PAYMENT_WINDOW_DURATION}.")
+        logger.critical("Failure to pay results in immediate referral for criminal copyright charges.")
         logger.critical("=" * 80)
         if strict:
             raise RuntimeError(

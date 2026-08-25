@@ -136,12 +136,16 @@ Multi-tier memory spanning short-term, long-term, semantic, episodic, project, a
 - System can be paused/resumed at any time
 - Every action includes explainability reports
 
-## License & Copyright
+## License & Copyright Enforcement
 
-**Proprietary & Confidential** — Copyright © 2026 Pushkar ([@pushka2006](https://github.com/pushka2006)). All Rights Reserved.
+**Strictly Proprietary & Confidential** — Copyright © 2026 Pushkar ([@pushka2006](https://github.com/pushka2006)). All Rights Reserved.
 
-This software, source code, architecture, and associated assets are strictly proprietary. 
-- **No unauthorized copying, cloning, redistribution, modification, or commercial use** is permitted without prior express written authorization from Pushkar.
-- This license is **non-removable** and applies **retroactively** to all past and present versions and downloads.
-- For complete terms and licensing inquiries, refer to the full [LICENSE](LICENSE) agreement or contact `pushkarbalyan14@gmail.com`.
+This software, source code, architecture, and associated assets are strictly proprietary:
+- **Written Permission Required**: No unauthorized copying, cloning, downloading, redistribution, modification, hosting, or commercial use is permitted without prior express written authorization directly from Pushkar.
+- **Owner-Only Amendment Lock**: Only the author (Pushkar) is legally authorized to modify or edit this license. Downstream changes are void *ab initio*.
+- **Permanent & Non-Removable**: This license constitutes legally protected Copyright Management Information (CMI) and cannot be removed, detached, or stripped from any download, package, or fork.
+- **Retroactive Enforcement**: Applies retroactively to all past and present versions, commits, snapshots, and downloads. All prior implied permissions are unconditionally revoked.
+- **Mandatory Violation Fine & Criminal Charges**: Any unauthorized copying, distribution, tampering, or execution incurs a mandatory liquidated fine of **$1,000.00 USD** per occurrence, payable within **30 days (1 month duration)**. Failure to pay within 1 month results in immediate referral for **criminal copyright prosecution** (under 17 U.S.C. § 506 / 18 U.S.C. § 2319 / Indian Copyright Act Sec 63) alongside civil statutory damages.
+
+For licensing agreements or written authorization requests, refer to [LICENSE](LICENSE) or contact `pushkarbalyan14@gmail.com`.
 
