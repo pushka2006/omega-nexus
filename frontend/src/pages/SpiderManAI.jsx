@@ -439,6 +439,7 @@ export default function SpiderManAI() {
   const [webSearchWiki, setWebSearchWiki] = useState([]);
   const [webSearchCode, setWebSearchCode] = useState([]);
   const [webSearchRelated, setWebSearchRelated] = useState([]);
+  const [webSearchDossier, setWebSearchDossier] = useState("");
   const [webSearchCategory, setWebSearchCategory] = useState("all");
   const [webSearchLoading, setWebSearchLoading] = useState(false);
 
@@ -789,6 +790,7 @@ export default function SpiderManAI() {
         setWebSearchWiki(res.wiki || []);
         setWebSearchCode(res.code || []);
         setWebSearchRelated(res.related_queries || []);
+        setWebSearchDossier(res.dossier || "");
         setAiResponse(res.summary);
         setVoiceQuery(`Web Search: "${queryToSearch}"`);
         speakKaren(res.speech || `Search complete. Found verified intelligence for ${queryToSearch}.`);
@@ -2841,9 +2843,10 @@ export default function SpiderManAI() {
                 </div>
 
                 {/* Multi-Stream Category Filter Tabs */}
-                <div style={{ display: "flex", gap: 6, borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 6 }}>
+                <div style={{ display: "flex", gap: 6, borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 6, flexWrap: "wrap" }}>
                   {[
                     { id: "all", label: `🌐 ALL SOURCES (${webSearchResults.length})` },
+                    { id: "dossier", label: `📋 FULL DOSSIER` },
                     { id: "news", label: `📰 LIVE NEWS (${webSearchNews.length})` },
                     { id: "wiki", label: `📚 ENCYCLOPEDIA (${webSearchWiki.length})` },
                     { id: "code", label: `💻 GITHUB & CODE (${webSearchCode.length})` }
@@ -2867,6 +2870,23 @@ export default function SpiderManAI() {
 
                 {/* In-App Live Intelligence Results Display */}
                 {(() => {
+                  if (webSearchCategory === "dossier") {
+                    return (
+                      <div style={{
+                        background: "rgba(15,23,42,0.95)", border: "1px solid rgba(0,245,255,0.3)",
+                        borderRadius: 6, padding: "14px 16px", maxHeight: 320, overflowY: "auto",
+                        color: "#e2e8f0", fontSize: 11.5, lineHeight: 1.6, whiteSpace: "pre-wrap",
+                        fontFamily: "'Space Grotesk', sans-serif"
+                      }}>
+                        {webSearchDossier || (
+                          <div style={{ color: "rgba(148,163,184,0.8)" }}>
+                            Executive research dossier will appear here upon executing search.
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
                   let displayList = webSearchResults;
                   if (webSearchCategory === "news") displayList = webSearchNews;
                   else if (webSearchCategory === "wiki") displayList = webSearchWiki;

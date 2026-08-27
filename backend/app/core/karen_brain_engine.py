@@ -282,6 +282,8 @@ class KarenBrainEngine:
     # ──────────────────────────────────────────────────────────────────────────
     async def execute_natural_conversation(self, query: str, context: Optional[str] = None) -> Dict[str, Any]:
         """Executes natural multi-turn dialogue on ANY topic with high emotional intelligence and real factual knowledge."""
+        from app.core.deep_web_researcher import deep_web_researcher
+
         start_time = time.perf_counter()
         q_lower = query.lower().strip()
 
@@ -336,19 +338,19 @@ class KarenBrainEngine:
             intent = "KNOWLEDGE_GRAPH_HIT"
             response, speech = KNOWLEDGE_INDEX[q_lower]
         else:
-            # 3. Dynamic Real-Time Live Web Search & Knowledge Synthesis
-            stream_data = self._fetch_live_web_intelligence(query)
-            live_results = stream_data.get("all", [])
+            # 3. Autonomous Deep Web Research & Intelligence Synthesis
+            research = deep_web_researcher.perform_deep_search(query)
+            live_results = research.get("results", [])
             if live_results:
-                intent = "WEB_SYNTHESIS"
-                top_facts = []
+                intent = "DEEP_WEB_SYNTHESIS"
+                top_findings = []
                 for r in live_results[:4]:
-                    top_facts.append(f"• **{r['title']}**: {r['snippet']}")
+                    top_findings.append(f"• **{r['title']}** ({r['source']}): {r['snippet']}")
                 
                 response = (
                     f"**Verified Intelligence Dossier for '{query}'**:\n\n"
-                    + "\n\n".join(top_facts) +
-                    f"\n\n*Verified Sources: Wikipedia Knowledge Base, Google News Real-Time, GitHub Open Source, and Global Web Index.*"
+                    + "\n\n".join(top_findings) +
+                    f"\n\n*Verified Intelligence Streams: Global Web Index, Wikipedia Knowledge Base, Google News Real-Time, GitHub Repositories, and Hacker News.*"
                 )
                 first_fact = live_results[0]['snippet'].split(". ")[0] if live_results[0]['snippet'] else query
                 speech = f"According to verified intelligence for {query}: {first_fact}."
@@ -377,71 +379,29 @@ class KarenBrainEngine:
     # ──────────────────────────────────────────────────────────────────────────
     async def execute_web_search(self, query: str) -> Dict[str, Any]:
         """Executes live global 5-stream web search on ANY user query and synthesizes a deep research dossier."""
-        start_time = time.perf_counter()
+        from app.core.deep_web_researcher import deep_web_researcher
+
         clean_q = query.strip()
         if not clean_q:
             clean_q = "Artificial Intelligence breakthroughs latest news"
 
-        stream_data = self._fetch_live_web_intelligence(clean_q)
-        search_results = stream_data.get("all", [])
-        news_items = stream_data.get("news", [])
-        wiki_items = stream_data.get("wiki", [])
-        code_items = stream_data.get("code", [])
-
-        # If live search is empty, provide structured real search engine fallback links
-        if not search_results:
-            search_results = [
-                {
-                    "title": f"Google Web Search: {clean_q}",
-                    "snippet": f"Execute real-time web search for '{clean_q}' across global indexed pages and technical documentation.",
-                    "source": "Google Search Index",
-                    "url": f"https://www.google.com/search?q={urllib.parse.quote(clean_q)}",
-                    "category": "web"
-                },
-                {
-                    "title": f"Wikipedia Knowledge Base: {clean_q}",
-                    "snippet": f"Explore verified encyclopedic entries, citations, and background articles for '{clean_q}'.",
-                    "source": "Wikipedia",
-                    "url": f"https://en.wikipedia.org/wiki/Special:Search?search={urllib.parse.quote(clean_q)}",
-                    "category": "wiki"
-                },
-                {
-                    "title": f"Google News Live Coverage: {clean_q}",
-                    "snippet": f"Read latest news reports, verified journalism, and active press releases on '{clean_q}'.",
-                    "source": "Google News",
-                    "url": f"https://news.google.com/search?q={urllib.parse.quote(clean_q)}",
-                    "category": "news"
-                }
-            ]
-
-        top_title = search_results[0]['title'] if search_results else clean_q
-        top_snippet = search_results[0]['snippet'] if search_results else ""
-        summary = f"Multi-Stream Web Search for '{clean_q}' complete. Retrieved {len(search_results)} live verified sources across Wikipedia, Google News, GitHub, and Web Index. Top finding: {top_title} — {top_snippet[:150]}..."
-        speech = f"Web search for {clean_q} complete. Top result: {top_title}."
-
-        related_queries = [
-            f"Latest developments in {clean_q}",
-            f"{clean_q} official documentation and guides",
-            f"Technical architecture and analysis of {clean_q}",
-            f"{clean_q} news and industry impact"
-        ]
-
-        elapsed_ms = round((time.perf_counter() - start_time) * 1000, 2)
-        self.auto_learner.record_interaction(clean_q, "WEB_SEARCH", summary, elapsed_ms)
+        research = deep_web_researcher.perform_deep_search(clean_q)
+        self.auto_learner.record_interaction(clean_q, "WEB_SEARCH", research.get("summary", ""), research.get("latency_ms", 100))
 
         return {
             "status": "success",
             "capability": "Web Search",
             "query": clean_q,
-            "results_count": len(search_results),
-            "results": search_results,
-            "news": news_items,
-            "wiki": wiki_items,
-            "code": code_items,
-            "summary": summary,
-            "speech": speech,
-            "related_queries": related_queries,
-            "latency_ms": elapsed_ms
+            "results_count": research.get("results_count", 0),
+            "results": research.get("results", []),
+            "news": research.get("news", []),
+            "wiki": research.get("wiki", []),
+            "code": research.get("code", []),
+            "dossier": research.get("dossier", ""),
+            "summary": research.get("summary", ""),
+            "speech": research.get("speech", ""),
+            "related_queries": research.get("related_queries", []),
+            "latency_ms": research.get("latency_ms", 100)
         }
 
     # ──────────────────────────────────────────────────────────────────────────
