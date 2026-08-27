@@ -630,6 +630,7 @@ export default function SpiderManAI() {
 
   const recRef = useRef(null);
   const fallbackTimerRef = useRef(null);
+  const latestTranscriptRef = useRef("");
 
   // Live real-time formatted clock matching reference image
   useEffect(() => {
@@ -892,84 +893,98 @@ export default function SpiderManAI() {
   };
 
   const handleToggleVoice = () => {
-    // If currently listening, stop it cleanly
+    // If currently listening, stop and immediately execute what was spoken
     if (isListening) {
       if (fallbackTimerRef.current) {
         clearTimeout(fallbackTimerRef.current);
         fallbackTimerRef.current = null;
       }
       if (recRef.current) {
-        try { recRef.current.abort(); } catch (_) {}
+        try { recRef.current.stop(); } catch (_) {}
       }
       setIsListening(false);
-      setVoiceQuery("Voice command standby.");
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
+      const spoken = latestTranscriptRef.current.trim();
+      if (spoken && spoken !== "Listening... Speak your directive now" && spoken !== "Voice command standby.") {
+        handleTriggerCommand("GENERAL", spoken);
+      } else {
+        setVoiceQuery("Voice command standby.");
       }
       return;
     }
 
-    // Start listening
+    // Cancel any previous speech output before listening so mic doesn't hear Karen's voice
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+
+    latestTranscriptRef.current = "";
     setIsListening(true);
     setVoiceQuery("Listening... Speak your directive now");
-    speakKaren("I'm listening, Peter. Speak now.");
 
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (SpeechRec) {
       try {
         const rec = new SpeechRec();
-        rec.continuous = false;
+        rec.continuous = true;
         rec.interimResults = true;
         rec.lang = "en-US";
         recRef.current = rec;
 
         rec.onresult = (e) => {
-          if (fallbackTimerRef.current) {
-            clearTimeout(fallbackTimerRef.current);
-            fallbackTimerRef.current = null;
+          let accumulated = "";
+          for (let i = 0; i < e.results.length; i++) {
+            accumulated += e.results[i][0].transcript + " ";
           }
-          const results = Array.from(e.results);
-          const transcript = results.map(r => r[0].transcript).join("");
-          setVoiceQuery(`"${transcript}"`);
-
-          const isFinal = results.some(r => r.isFinal);
-          if (isFinal && transcript.trim()) {
-            rec.stop();
-            handleTriggerCommand("GENERAL", transcript.trim());
+          const text = accumulated.trim();
+          if (text) {
+            latestTranscriptRef.current = text;
+            setVoiceQuery(`"${text}"`);
           }
         };
 
         rec.onerror = (err) => {
-          console.warn("[Karen Voice] SpeechRecognition notice:", err.error);
-          setIsListening(false);
-          if (fallbackTimerRef.current) {
-            clearTimeout(fallbackTimerRef.current);
-            fallbackTimerRef.current = null;
-          }
-          if (err.error !== "no-speech") {
-            setVoiceQuery("Voice standby. Click microphone to speak again.");
+          console.warn("[Karen Voice] SpeechRecognition event:", err.error);
+          if (err.error === "not-allowed" || err.error === "service-not-allowed") {
+            setVoiceQuery("Microphone permission blocked. Please allow mic in browser settings.");
+            setIsListening(false);
+            setModalMode("NATURAL_CONVERSATION");
+            speakKaren("Microphone access is blocked in your browser. You can type directly in the console.");
+          } else if (err.error !== "no-speech") {
+            setIsListening(false);
           }
         };
 
         rec.onend = () => {
           setIsListening(false);
+          const spoken = latestTranscriptRef.current.trim();
+          if (spoken && spoken !== "Listening... Speak your directive now" && spoken !== "Voice command standby.") {
+            handleTriggerCommand("GENERAL", spoken);
+          }
         };
 
         rec.start();
 
-        // If no speech detected in 6 seconds, gently return to standby without forcing any threat scan
+        // 8 second safety timeout to finish listening and execute
         fallbackTimerRef.current = setTimeout(() => {
-          if (isListening) {
-            setIsListening(false);
+          if (recRef.current) {
+            try { recRef.current.stop(); } catch (_) {}
+          }
+          setIsListening(false);
+          const spoken = latestTranscriptRef.current.trim();
+          if (spoken && spoken !== "Listening... Speak your directive now" && spoken !== "Voice command standby.") {
+            handleTriggerCommand("GENERAL", spoken);
+          } else {
             setVoiceQuery("Standing by for your directive.");
           }
-        }, 6000);
+        }, 8000);
 
       } catch (err) {
-        console.warn("[Karen Voice] SpeechRecognition init issue:", err);
+        console.warn("[Karen Voice] Failed to initialize SpeechRecognition:", err);
         setIsListening(false);
-        setVoiceQuery("Standing by. Type or tap to speak.");
+        setModalMode("NATURAL_CONVERSATION");
+        speakKaren("Voice recognition unavailable. Opening direct conversation console.");
       }
     } else {
       // Browser doesn't support Web Speech API - open Natural Conversation modal
@@ -1273,25 +1288,26 @@ export default function SpiderManAI() {
             {/* Audio Wave Wings Flanking Central Red Pill Button: TAP TO SPEAK */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "90%", margin: "2px auto 0" }}>
               <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-                <SoundWaveEqualizer bars={14} height={12} color="#ff2a4d" active={isListening || isSpeaking} />
+                <SoundWaveEqualizer bars={14} height={12} color={isListening ? "#00FF88" : "#ff2a4d"} active={isListening || isSpeaking} />
               </div>
 
               <button
+                type="button"
                 onClick={handleToggleVoice}
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 5,
-                  padding: "4px 14px",
+                  gap: 6,
+                  padding: "6px 16px",
                   borderRadius: 20,
                   background: isListening
                     ? "linear-gradient(90deg, #ff1e42 0%, #b50f28 100%)"
                     : "linear-gradient(90deg, rgba(255, 42, 77, 0.25) 0%, rgba(181, 15, 40, 0.35) 100%)",
-                  border: "1.5px solid #ff2a4d",
-                  boxShadow: isListening ? "0 0 25px rgba(255,42,77,0.7)" : "0 0 10px rgba(255,42,77,0.3)",
+                  border: isListening ? "1.5px solid #00FF88" : "1.5px solid #ff2a4d",
+                  boxShadow: isListening ? "0 0 25px rgba(0,255,136,0.7)" : "0 0 10px rgba(255,42,77,0.3)",
                   color: "#ffffff",
-                  fontSize: 9,
-                  fontWeight: 700,
+                  fontSize: 9.5,
+                  fontWeight: 800,
                   fontFamily: "'Space Grotesk', monospace",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
@@ -1302,12 +1318,12 @@ export default function SpiderManAI() {
                 onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.04)"; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = "scale(1)"; }}
               >
-                <Mic size={11} color="#ff2a4d" />
-                <span>{isListening ? "LISTENING..." : "TAP TO SPEAK"}</span>
+                <Mic size={12} color={isListening ? "#00FF88" : "#ff2a4d"} />
+                <span>{isListening ? "🔴 STOP & SEND" : "🎙️ TAP TO SPEAK"}</span>
               </button>
 
               <div style={{ flex: 1, display: "flex", justifyContent: "flex-start" }}>
-                <SoundWaveEqualizer bars={14} height={12} color="#ff2a4d" active={isListening || isSpeaking} />
+                <SoundWaveEqualizer bars={14} height={12} color={isListening ? "#00FF88" : "#ff2a4d"} active={isListening || isSpeaking} />
               </div>
             </div>
 
@@ -1317,13 +1333,46 @@ export default function SpiderManAI() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
             
             {/* VOICE COMMAND CARD */}
-            <div className="spider-hud-card" style={{ padding: "12px 16px" }}>
-              <div className="spider-hud-bracket-tl" />
-              <div className="spider-hud-bracket-tr" />
-              <div style={{ fontSize: 11, fontWeight: 800, color: "#ff2a4d", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 8 }}>
-                VOICE COMMAND
+            <div className="spider-hud-card" style={{ padding: "12px 16px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <div>
+                <div className="spider-hud-bracket-tl" />
+                <div className="spider-hud-bracket-tr" />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: "#ff2a4d", letterSpacing: "0.15em", textTransform: "uppercase" }}>
+                    VOICE COMMAND
+                  </div>
+                  <span style={{ fontSize: 8.5, color: isListening ? "#00FF88" : "#00f5ff", fontFamily: "monospace", fontWeight: 700 }}>
+                    {isListening ? "🔴 RECORDING..." : "🟢 ONLINE"}
+                  </span>
+                </div>
+                <DualSpectrumWaveform active={isListening} statusText={voiceQuery} />
               </div>
-              <DualSpectrumWaveform active={isListening} statusText={voiceQuery} />
+
+              {/* Quick Spoken Directive Chips */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 8 }}>
+                {[
+                  { label: "💬 Chat", cmd: "Hello Karen, status report" },
+                  { label: "🔍 Search AI", cmd: "Search web for artificial intelligence developments" },
+                  { label: "📊 Hardware", cmd: "Analyze host hardware metrics" },
+                  { label: "💻 Code", cmd: "Synthesize high performance Python async service" },
+                  { label: "⏰ Reminder", cmd: "Set reminder for project review at 5 PM" }
+                ].map(p => (
+                  <button
+                    key={p.label}
+                    type="button"
+                    onClick={() => handleTriggerCommand("GENERAL", p.cmd)}
+                    style={{
+                      padding: "2px 7px", borderRadius: 10, background: "rgba(0,245,255,0.08)",
+                      border: "1px solid rgba(0,245,255,0.2)", color: "rgba(226,232,240,0.85)",
+                      fontSize: 8.5, cursor: "pointer", fontFamily: "monospace"
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = "#00f5ff"; e.currentTarget.style.background = "rgba(0,245,255,0.2)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(0,245,255,0.2)"; e.currentTarget.style.background = "rgba(0,245,255,0.08)"; }}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* AI RESPONSE CARD */}
