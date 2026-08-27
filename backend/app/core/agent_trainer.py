@@ -430,11 +430,12 @@ class AgentTrainer:
         except Exception:
             pass
 
-        logger.info(
-            "agent_trainer.train_all_fullstack.completed",
-            agents=len(trained_agents), avg_precision=avg_precision
-        )
-        return report
+    async def get_latest_reports(self, limit: int = 10) -> list[dict[str, Any]]:
+        """Return the latest training reports from memory or database."""
+        if not self.reports_history:
+            # Generate initial baseline report if empty
+            await self._generate_report(initial=True)
+        return self.reports_history[:limit]
 
 
 # Singleton AgentTrainer instance

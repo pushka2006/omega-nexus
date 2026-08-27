@@ -8,6 +8,7 @@ import {
 
 const COMMANDS = [
   // Navigation
+  { id: "nav-spiderman",label: "Spider-Man AI OS", desc: "Karen AI Stark HUD v1.0",     icon: Zap,          to: "/spiderman", category: "Navigate" },
   { id: "nav-cmd",     label: "Command Center",   desc: "Dashboard & AI overview",    icon: Cpu,          to: "/",          category: "Navigate" },
   { id: "nav-chat",    label: "Chat Hub",          desc: "Talk to any agent",          icon: MessageSquare, to: "/chat",      category: "Navigate" },
   { id: "nav-agents",  label: "Agent Network",     desc: "13 specialized AI agents",   icon: Network,      to: "/agents",    category: "Navigate" },

@@ -35,6 +35,7 @@ import RoboticsIoTStudio from "./pages/RoboticsIoTStudio";
 import MarketingSuite from "./pages/MarketingSuite";
 import FinanceOS from "./pages/FinanceOS";
 import LegalCompliance from "./pages/LegalCompliance";
+import SpiderManAI from "./pages/SpiderManAI";
 
 function App() {
   return (
@@ -88,6 +89,9 @@ function App() {
                   <Route path="/particles" element={<ParticlePlayground />} />
                   <Route path="/animate"   element={<CreativeStudio />} />
                   <Route path="/handanim"  element={<HandParticleStudio />} />
+                  <Route path="/spiderman" element={<SpiderManAI />} />
+                  <Route path="/spiderman-ai" element={<SpiderManAI />} />
+                  <Route path="/spider-nexus" element={<SpiderManAI />} />
                   <Route path="/auth/mock/:provider" element={<MockAuth />} />
                   <Route path="*"          element={<Navigate to="/" replace />} />
                 </Routes>

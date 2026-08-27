@@ -4,9 +4,11 @@ import {
   Cpu, MessageSquare, Network, Brain, Library, Code2, Terminal, Globe,
   ListTodo, Activity, Settings as SettingsIcon, Sparkles, Search, ShieldAlert, Lock, Mic, Camera, Atom, Clapperboard, Wind,
   Briefcase, TrendingUp, Zap, DollarSign, Bot, Database, FlaskConical, Megaphone, Scale, Layers, Radio, Volume2,
-  Image as ImageIcon
+  Image as ImageIcon, MapPin, CloudSun, Sun, CloudRain, CloudFog, CloudSnow, CloudLightning
 } from "lucide-react";
 import { http } from "../lib/api";
+import { toast } from "./Toast";
+import { useDeviceWeather } from "../lib/locationWeather";
 import CommandPalette from "./CommandPalette";
 import { useSecurity } from "../lib/SecurityContext";
 import { useVoice } from "../lib/VoiceContext";
@@ -16,12 +18,14 @@ import VoicePromptOverlay from "./VoicePromptOverlay";
 import ShutdownScreen from "./ShutdownScreen";
 import WelcomeScreen from "./WelcomeScreen";
 import SideRobot from "./SideRobot";
+import { SpiderEmblem } from "../pages/SpiderManAI";
 
 const NAV_SECTIONS = [
   {
     title: "MAIN NAVIGATION",
     items: [
       { to: "/",          label: "Command Center",       icon: Cpu,           id: "cmd" },
+      { to: "/spiderman", label: "Spider-Man AI",        icon: ShieldAlert,   id: "spiderman", badge: "ACTIVE", isSpider: true },
       { to: "/",          label: "Master AI Brain",      icon: Brain,         id: "brain" },
       { to: "/agents",    label: "Agents Network",       icon: Network,       id: "agents", badge: "182" },
       { to: "/projects",  label: "Projects",             icon: Briefcase,     id: "projects", badge: "47" },
@@ -43,6 +47,7 @@ const NAV_SECTIONS = [
   {
     title: "AI OS MODULES",
     items: [
+      { to: "/spiderman", label: "Spider-Nexus HUD",     icon: ShieldAlert,   id: "spiderhud", badge: "v1.0", isSpider: true },
       { to: "/iot",       label: "Research Lab",         icon: FlaskConical,  id: "research" },
       { to: "/creative",  label: "Creative Studio",      icon: Sparkles,      id: "creative" },
       { to: "/image-gen", label: "AI Image Generator",   icon: ImageIcon,     id: "imagegen", badge: "NEW" },
@@ -60,6 +65,7 @@ export default function Shell({ children }) {
   const [shellStats, setShellStats] = useState({ agents: "36", projects: "42", live: "42 Live" });
   const { lockSystem } = useSecurity();
   const { startListening } = useVoice();
+  const { weather, loading: weatherLoading, requestGpsLocation, isGps } = useDeviceWeather();
 
   // Fetch real counts from backend
   useEffect(() => {
@@ -114,7 +120,7 @@ export default function Shell({ children }) {
 
   const activePage = "MASTER CONTROL CENTER";
 
-  const isAuthPage = loc.pathname.startsWith("/auth/mock/") || loc.pathname.startsWith("/live") || loc.pathname.startsWith("/deployed");
+  const isAuthPage = loc.pathname.startsWith("/auth/mock/") || loc.pathname.startsWith("/live") || loc.pathname.startsWith("/deployed") || loc.pathname.startsWith("/spiderman") || loc.pathname.startsWith("/spider-nexus");
   if (isAuthPage) {
     return <>{children}</>;
   }
@@ -185,8 +191,10 @@ export default function Shell({ children }) {
                 {sec.title}
               </div>
               {sec.items.map(n => {
-                const active = loc.pathname === n.to && n.id === "cmd";
+                const active = (n.id === "cmd" && (loc.pathname === "/" || loc.pathname === "/cmd")) ||
+                               (n.id !== "cmd" && loc.pathname === n.to);
                 const Icon = n.icon;
+                const isSpider = n.isSpider || n.id === "spiderman" || n.id === "spiderhud";
                 return (
                   <Link
                     key={n.id + n.label}
@@ -196,20 +204,42 @@ export default function Shell({ children }) {
                       display: "flex", alignItems: "center", gap: 9,
                       padding: "6px 10px", borderRadius: 7, marginBottom: 2,
                       textDecoration: "none", transition: "all 0.15s ease",
-                      background: active ? "linear-gradient(90deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.15))" : "transparent",
-                      border: active ? "1px solid rgba(168, 85, 247, 0.4)" : "1px solid transparent",
-                      color: active ? "#ffffff" : "rgba(148,163,184,0.8)",
+                      background: active 
+                        ? (isSpider 
+                            ? "linear-gradient(90deg, rgba(255, 42, 77, 0.3), rgba(181, 15, 40, 0.15))" 
+                            : "linear-gradient(90deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.15))")
+                        : "transparent",
+                      border: active 
+                        ? (isSpider ? "1px solid rgba(255, 42, 77, 0.6)" : "1px solid rgba(168, 85, 247, 0.4)")
+                        : (isSpider ? "1px solid rgba(255, 42, 77, 0.15)" : "1px solid transparent"),
+                      color: active ? "#ffffff" : (isSpider ? "#ff4d6d" : "rgba(148,163,184,0.8)"),
                     }}
-                    onMouseEnter={e => { if (!active) { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.color = "#ffffff"; } }}
-                    onMouseLeave={e => { if (!active) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(148,163,184,0.8)"; } }}
+                    onMouseEnter={e => { 
+                      if (!active) { 
+                        e.currentTarget.style.background = isSpider ? "rgba(255,42,77,0.12)" : "rgba(255,255,255,0.04)"; 
+                        e.currentTarget.style.color = "#ffffff"; 
+                      } 
+                    }}
+                    onMouseLeave={e => { 
+                      if (!active) { 
+                        e.currentTarget.style.background = "transparent"; 
+                        e.currentTarget.style.color = isSpider ? "#ff4d6d" : "rgba(148,163,184,0.8)"; 
+                      } 
+                    }}
                   >
-                    <Icon style={{ width: 14, height: 14, flexShrink: 0, color: active ? "#a855f7" : "rgba(148,163,184,0.7)" }} />
-                    <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 11, fontWeight: active ? 600 : 400, flex: 1 }}>{n.label}</span>
+                    {isSpider ? (
+                      <SpiderEmblem size={14} color={active ? "#ff2a4d" : "#ff4d6d"} />
+                    ) : (
+                      <Icon style={{ width: 14, height: 14, flexShrink: 0, color: active ? "#a855f7" : "rgba(148,163,184,0.7)" }} />
+                    )}
+                    <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 11, fontWeight: (active || isSpider) ? 600 : 400, flex: 1 }}>{n.label}</span>
                     {n.badge && (
                       <span style={{
                         fontSize: 9, fontWeight: 700, padding: "1px 6px", borderRadius: 10,
-                        background: "rgba(99, 102, 241, 0.2)", border: "1px solid rgba(99, 102, 241, 0.4)",
-                        color: "#818cf8", fontFamily: "monospace"
+                        background: isSpider ? "rgba(255, 42, 77, 0.2)" : "rgba(99, 102, 241, 0.2)",
+                        border: isSpider ? "1px solid rgba(255, 42, 77, 0.5)" : "1px solid rgba(99, 102, 241, 0.4)",
+                        color: isSpider ? "#ff2a4d" : "#818cf8",
+                        fontFamily: "monospace"
                       }}>
                         {n.id === "agents" ? shellStats.agents :
                          n.id === "projects" ? shellStats.projects :
@@ -219,6 +249,7 @@ export default function Shell({ children }) {
                   </Link>
                 );
               })}
+
             </div>
           ))}
         </nav>
@@ -281,7 +312,33 @@ export default function Shell({ children }) {
             <span style={{ fontSize: 11, color: "rgba(148,163,184,0.4)", fontFamily: "monospace" }}>nexus://os{loc.pathname}</span>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 16, fontSize: 11, fontFamily: "monospace" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 11, fontFamily: "monospace" }}>
+            {/* Live Real Device Location & Weather Badge */}
+            <div
+              onClick={() => {
+                requestGpsLocation();
+                toast.success(`Location synced: ${weather?.location || "Device GPS active"}`);
+              }}
+              title={`Device Real Location: ${weather?.location || "Detecting..."} | Condition: ${weather?.condition || "Live"} | Click to Sync GPS`}
+              style={{
+                display: "flex", alignItems: "center", gap: 6,
+                background: "rgba(0, 245, 255, 0.06)", border: "1px solid rgba(0, 245, 255, 0.2)",
+                borderRadius: 6, padding: "4px 9px", cursor: "pointer", color: "#e2e8f0",
+                transition: "all 0.15s", fontSize: 10.5, fontFamily: "monospace"
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(0,245,255,0.4)"; e.currentTarget.style.background = "rgba(0,245,255,0.12)"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(0,245,255,0.2)"; e.currentTarget.style.background = "rgba(0,245,255,0.06)"; }}
+            >
+              <MapPin style={{ width: 11, height: 11, color: "#00f5ff", flexShrink: 0 }} />
+              <span style={{ color: "#fff", fontWeight: 700, maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {weather?.city || (weatherLoading ? "Locating..." : "Device")}
+              </span>
+              <span style={{ color: "#38bdf8", fontWeight: 800 }}>
+                {weather?.temp_str || (weather?.temp !== undefined ? `${weather.temp}°C` : "24°C")}
+              </span>
+              <span style={{ width: 5, height: 5, borderRadius: "50%", background: isGps ? "#00FF88" : "#38bdf8", display: "inline-block" }} />
+            </div>
+
             <button
               onClick={() => setPaletteOpen(true)}
               style={{ display: "flex", alignItems: "center", gap: 5, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "4px 9px", cursor: "pointer", color: "rgba(148,163,184,0.5)", transition: "all 0.15s", fontSize: 10 }}

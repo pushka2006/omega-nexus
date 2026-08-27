@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import {
   Globe, Search, Image as ImageIcon, Video, Newspaper, MapPin, ShoppingBag,
   BookOpen, Plane, DollarSign, History, Bookmark, Download, Cpu, Settings,
-  ShieldCheck, Moon, Sun, Mic, Camera, Plus, X, SunMedium, CloudSun,
-  Calculator, Ruler, QrCode, Languages, FileText, ArrowUpRight, RefreshCw, ExternalLink,
-  Check, Save, Copy, Layout, PanelLeft, PanelRight, Bot
+  ShieldCheck, Moon, Sun, Mic, Camera, Plus, X, CloudSun,
+  CloudRain, CloudSnow, CloudLightning, CloudFog, Navigation,
+  Calculator, Ruler, QrCode, Languages, FileText, ExternalLink,
+  Save, Copy, Layout, PanelLeft, PanelRight, Bot
 } from "lucide-react";
 import { http } from "../lib/api";
 import { toast } from "../components/Toast";
+import { useDeviceWeather } from "../lib/locationWeather";
 
 export default function BrowserConsole() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,8 +48,8 @@ export default function BrowserConsole() {
   // 5. Notes
   const [noteContent, setNoteContent] = useState(() => localStorage.getItem("browser_quick_note") || "");
 
-  // Real Data State
-  const [weatherData, setWeatherData] = useState(null);
+  // Real Device Location & Live Weather Hook
+  const { weather: weatherData, loading: weatherLoading, refresh: refreshWeather, requestGpsLocation, isGps } = useDeviceWeather();
   const [newsArticles, setNewsArticles] = useState([]);
   const [historyList, setHistoryList] = useState([
     { term: "top 10 programming languages", time: "10:30 AM" },
@@ -59,9 +61,7 @@ export default function BrowserConsole() {
 
   const fetchRealData = async () => {
     try {
-      const wRes = await http.get("/browser/weather");
-      if (wRes.data) setWeatherData(wRes.data);
-
+      refreshWeather();
       const nRes = await http.get("/browser/news");
       if (nRes.data?.articles) setNewsArticles(nRes.data.articles);
     } catch {
@@ -70,7 +70,9 @@ export default function BrowserConsole() {
   };
 
   useEffect(() => {
-    fetchRealData();
+    http.get("/browser/news").then(nRes => {
+      if (nRes.data?.articles) setNewsArticles(nRes.data.articles);
+    }).catch(() => {});
   }, []);
 
   const changeSidebarPosition = (newPos) => {
@@ -535,35 +537,66 @@ export default function BrowserConsole() {
           </div>
 
           {/* REAL WEATHER WIDGET FROM OPEN-METEO API */}
-          <div style={{ background: "rgba(15,23,42,0.85)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: 12, display: "flex", flexDirection: "column", gap: 8 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div style={{ fontSize: 9.5, color: "#94a3b8", fontFamily: "monospace", fontWeight: 700 }}>📍 {weatherData?.location || "San Francisco, CA"}</div>
-              <span style={{ fontSize: 7.5, color: "#00FF88", fontWeight: 800 }}>● Live Telemetry</span>
+          <div style={{ background: "rgba(15,23,42,0.85)", border: "1px solid rgba(0,245,255,0.15)", borderRadius: 12, padding: 12, display: "flex", flexDirection: "column", gap: 8, boxShadow: "0 4px 20px rgba(0,0,0,0.3)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
+              <div style={{ fontSize: 10, color: "#e2e8f0", fontFamily: "monospace", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={weatherData?.location || "Your Device Location"}>
+                📍 {weatherData?.location || (weatherLoading ? "Acquiring Device GPS..." : "Device Location")}
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
+                <span style={{ fontSize: 7.5, color: isGps ? "#00FF88" : "#38bdf8", fontWeight: 800, display: "flex", alignItems: "center", gap: 3 }}>
+                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: isGps ? "#00FF88" : "#38bdf8", display: "inline-block" }} />
+                  {isGps ? "Device GPS" : "Live IP"}
+                </span>
+                <button
+                  onClick={() => { requestGpsLocation(); toast.success("Syncing real device coordinates..."); }}
+                  title="Sync Device Real Location via GPS"
+                  style={{
+                    background: "rgba(0,245,255,0.12)", border: "1px solid rgba(0,245,255,0.35)",
+                    borderRadius: 4, color: "#00f5ff", padding: "2px 5px", cursor: "pointer",
+                    fontSize: 8, display: "flex", alignItems: "center", gap: 3, fontFamily: "monospace", fontWeight: 700
+                  }}
+                >
+                  <Navigation size={8} /> Sync
+                </button>
+              </div>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div>
-                <div style={{ fontSize: 24, fontWeight: 900, color: "#fff" }}>{weatherData?.temp_c || "18°c"}</div>
-                <div style={{ fontSize: 9.5, color: "#94a3b8" }}>{weatherData?.condition || "Partly Cloudy"}</div>
+                <div style={{ fontSize: 24, fontWeight: 900, color: "#fff", lineHeight: 1 }}>{weatherData?.temp_c || (weatherData?.temp !== undefined ? `${weatherData.temp}°C` : "24°C")}</div>
+                <div style={{ fontSize: 9.5, color: "#38bdf8", marginTop: 3, fontWeight: 600 }}>{weatherData?.condition || "Partly Cloudy"}</div>
               </div>
-              <CloudSun style={{ width: 38, height: 38, color: "#eab308" }} />
-              <div style={{ fontSize: 8, color: "#94a3b8", fontFamily: "monospace" }}>
-                <div>Humidity: {weatherData?.humidity || "64%"}</div>
-                <div>Wind: {weatherData?.wind || "12 km/h"}</div>
-                <div>Feels: {weatherData?.feels_like || "18°C"}</div>
+              <div>
+                {(() => {
+                  const iconType = weatherData?.icon || "CloudSun";
+                  if (iconType === "Sun") return <Sun style={{ width: 36, height: 36, color: "#fbbf24" }} />;
+                  if (iconType === "CloudFog") return <CloudFog style={{ width: 36, height: 36, color: "#a5b4fc" }} />;
+                  if (iconType === "CloudDrizzle" || iconType === "CloudRain") return <CloudRain style={{ width: 36, height: 36, color: "#38bdf8" }} />;
+                  if (iconType === "CloudSnow" || iconType === "Snowflake") return <CloudSnow style={{ width: 36, height: 36, color: "#e2e8f0" }} />;
+                  if (iconType === "CloudLightning") return <CloudLightning style={{ width: 36, height: 36, color: "#eab308" }} />;
+                  return <CloudSun style={{ width: 36, height: 36, color: "#fbbf24" }} />;
+                })()}
+              </div>
+              <div style={{ fontSize: 8, color: "#94a3b8", fontFamily: "monospace", textAlign: "right" }}>
+                <div>Humidity: <strong style={{ color: "#e2e8f0" }}>{weatherData?.humidity || "55%"}</strong></div>
+                <div>Wind: <strong style={{ color: "#e2e8f0" }}>{weatherData?.wind || "10 km/h"}</strong></div>
+                <div>Feels: <strong style={{ color: "#e2e8f0" }}>{weatherData?.feels_like || `${weatherData?.temp ?? 24}°C`}</strong></div>
               </div>
             </div>
 
             {/* 5-Day Forecast */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 4, fontSize: 7.5, color: "#94a3b8", fontFamily: "monospace", textAlign: "center", paddingTop: 6, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-              {(weatherData?.forecast || [
-                { day: "Mon", hi: 19, lo: 12 },
-                { day: "Tue", hi: 20, lo: 13 },
-                { day: "Wed", hi: 21, lo: 14 },
-                { day: "Thu", hi: 22, lo: 15 },
-                { day: "Fri", hi: 20, lo: 13 },
+              {(weatherData?.forecast && weatherData.forecast.length > 0 ? weatherData.forecast.slice(0, 5) : [
+                { day: "Today", hi: 26, lo: 18, condition: "Partly Cloudy" },
+                { day: "Tomorrow", hi: 27, lo: 19, condition: "Clear Sky" },
+                { day: "Day 3", hi: 25, lo: 18, condition: "Rain Showers" },
+                { day: "Day 4", hi: 24, lo: 17, condition: "Partly Cloudy" },
+                { day: "Day 5", hi: 26, lo: 18, condition: "Clear Sky" },
               ]).map((f, i) => (
-                <div key={i}>{f.day}<br/><strong style={{ color: "#fff" }}>{f.hi}°/{f.lo}°</strong></div>
+                <div key={i} style={{ background: "rgba(255,255,255,0.02)", padding: "3px 1px", borderRadius: 4 }}>
+                  <div style={{ color: i === 0 ? "#00f5ff" : "#94a3b8", fontWeight: i === 0 ? 800 : 500 }}>{f.day}</div>
+                  <strong style={{ color: "#fff", display: "block", marginTop: 2 }}>{f.hi}°/{f.lo}°</strong>
+                </div>
               ))}
             </div>
           </div>
