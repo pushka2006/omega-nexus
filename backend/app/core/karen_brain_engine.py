@@ -137,83 +137,145 @@ class KarenBrainEngine:
         ]
 
     # ──────────────────────────────────────────────────────────────────────────
-    # HELPER: MULTI-SOURCE LIVE WEB & KNOWLEDGE FETCHER
+    # HELPER: MULTI-SOURCE LIVE WEB & KNOWLEDGE FETCHER (5 STREAMS)
     # ──────────────────────────────────────────────────────────────────────────
-    def _fetch_live_web_intelligence(self, query: str) -> List[Dict[str, str]]:
-        """Queries live Wikipedia, Google News, and DuckDuckGo for verified real-time facts."""
-        results: List[Dict[str, str]] = []
+    def _fetch_live_web_intelligence(self, query: str) -> Dict[str, Any]:
+        """Queries 5 live data streams: Wikipedia Extracts, Google News, GitHub Repos, HackerNews, and DuckDuckGo."""
         clean_q = query.strip()
         if not clean_q:
-            return results
+            clean_q = "Artificial Intelligence breakthroughs"
 
-        # 1. Wikipedia API Search
+        results_all: List[Dict[str, str]] = []
+        news_items: List[Dict[str, str]] = []
+        wiki_items: List[Dict[str, str]] = []
+        code_items: List[Dict[str, str]] = []
+        key_facts: List[str] = []
+
+        # 1. Wikipedia Search & Full Extract API
         try:
-            wiki_url = f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(clean_q)}&utf8=&format=json"
+            wiki_url = f"https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch={urllib.parse.quote(clean_q)}&gsrlimit=4&prop=extracts&exintro=1&explaintext=1&format=json"
             req = urllib.request.Request(wiki_url, headers={"User-Agent": "Mozilla/5.0 OmegaNexus/2.0"})
             with urllib.request.urlopen(req, timeout=4) as r:
                 data = json.loads(r.read().decode("utf-8"))
-                for item in data.get("query", {}).get("search", [])[:4]:
-                    title = item.get("title", "")
-                    raw_snippet = item.get("snippet", "")
-                    clean_snippet = re.sub(r"<[^>]+>", "", raw_snippet).strip()
-                    page_url = f"https://en.wikipedia.org/wiki/{urllib.parse.quote(title.replace(' ', '_'))}"
-                    if clean_snippet:
-                        results.append({
+                pages = data.get("query", {}).get("pages", {})
+                for pid, p in pages.items():
+                    title = p.get("title", "")
+                    extract = p.get("extract", "").strip()
+                    if extract:
+                        first_line = extract.split("\n")[0]
+                        page_url = f"https://en.wikipedia.org/wiki/{urllib.parse.quote(title.replace(' ', '_'))}"
+                        item = {
                             "title": f"Wikipedia: {title}",
-                            "snippet": clean_snippet,
+                            "snippet": first_line[:240] + ("..." if len(first_line) > 240 else ""),
                             "source": "Wikipedia Knowledge Base",
-                            "url": page_url
-                        })
+                            "url": page_url,
+                            "category": "wiki"
+                        }
+                        wiki_items.append(item)
+                        results_all.append(item)
+                        key_facts.append(first_line)
         except Exception as e:
             logger.warning("karen.wiki_search_error", error=str(e))
 
-        # 2. Google News Real-Time RSS Feed
+        # 2. Google News Live RSS Feed
         try:
             import xml.etree.ElementTree as ET
             news_url = f"https://news.google.com/rss/search?q={urllib.parse.quote(clean_q)}&hl=en-US&gl=US&ceid=US:en"
             req = urllib.request.Request(news_url, headers={"User-Agent": "Mozilla/5.0 OmegaNexus/2.0"})
             with urllib.request.urlopen(req, timeout=4) as r:
                 root = ET.fromstring(r.read().decode("utf-8", errors="ignore"))
-                for item in root.findall(".//item")[:4]:
-                    title = item.find("title").text if item.find("title") is not None else ""
-                    link = item.find("link").text if item.find("link") is not None else ""
-                    source_el = item.find("source")
+                for item_el in root.findall(".//item")[:4]:
+                    title = item_el.find("title").text if item_el.find("title") is not None else ""
+                    link = item_el.find("link").text if item_el.find("link") is not None else ""
+                    pub_date = item_el.find("pubDate").text if item_el.find("pubDate") is not None else ""
+                    source_el = item_el.find("source")
                     source = source_el.text if source_el is not None else "Google News"
                     if title:
-                        results.append({
+                        news_obj = {
                             "title": title,
-                            "snippet": f"Real-time news report from {source}. Click to read complete verified coverage.",
+                            "snippet": f"Published: {pub_date[:16] if pub_date else 'Recent'}. Live report from {source}.",
                             "source": source,
-                            "url": link or f"https://news.google.com/search?q={urllib.parse.quote(clean_q)}"
-                        })
+                            "url": link or f"https://news.google.com/search?q={urllib.parse.quote(clean_q)}",
+                            "category": "news"
+                        }
+                        news_items.append(news_obj)
+                        results_all.append(news_obj)
         except Exception as e:
             logger.warning("karen.news_search_error", error=str(e))
 
-        # 3. DuckDuckGo Instant Answer API
+        # 3. GitHub Repositories API
+        try:
+            gh_url = f"https://api.github.com/search/repositories?q={urllib.parse.quote(clean_q)}&sort=stars&order=desc&per_page=3"
+            req = urllib.request.Request(gh_url, headers={"User-Agent": "Mozilla/5.0 OmegaNexus/2.0"})
+            with urllib.request.urlopen(req, timeout=4) as r:
+                data = json.loads(r.read().decode("utf-8"))
+                for repo in data.get("items", []):
+                    full_name = repo.get("full_name", "")
+                    desc = repo.get("description") or "Open source project repository"
+                    stars = repo.get("stargazers_count", 0)
+                    lang = repo.get("language") or "Code"
+                    gh_obj = {
+                        "title": f"GitHub: {full_name} ({stars}★)",
+                        "snippet": f"Language: {lang} • {desc}",
+                        "source": "GitHub Open Source",
+                        "url": repo.get("html_url", f"https://github.com/search?q={urllib.parse.quote(clean_q)}"),
+                        "category": "code"
+                    }
+                    code_items.append(gh_obj)
+                    results_all.append(gh_obj)
+        except Exception as e:
+            logger.warning("karen.github_search_error", error=str(e))
+
+        # 4. Hacker News Search API (Algolia)
+        try:
+            hn_url = f"https://hn.algolia.com/api/v1/search?query={urllib.parse.quote(clean_q)}&tags=story"
+            req = urllib.request.Request(hn_url, headers={"User-Agent": "Mozilla/5.0 OmegaNexus/2.0"})
+            with urllib.request.urlopen(req, timeout=4) as r:
+                data = json.loads(r.read().decode("utf-8"))
+                for h in data.get("hits", [])[:3]:
+                    hn_title = h.get("title", "")
+                    hn_url_link = h.get("url") or f"https://news.ycombinator.com/item?id={h.get('objectID')}"
+                    points = h.get("points", 0)
+                    comments = h.get("num_comments", 0)
+                    if hn_title:
+                        hn_obj = {
+                            "title": f"Hacker News: {hn_title}",
+                            "snippet": f"Discussion: {points} points, {comments} comments on Hacker News.",
+                            "source": "Hacker News Discussions",
+                            "url": hn_url_link,
+                            "category": "code"
+                        }
+                        code_items.append(hn_obj)
+                        results_all.append(hn_obj)
+        except Exception as e:
+            logger.warning("karen.hn_search_error", error=str(e))
+
+        # 5. DuckDuckGo Instant Answer API
         try:
             ddg_url = f"https://api.duckduckgo.com/?q={urllib.parse.quote(clean_q)}&format=json&no_html=1&skip_disambig=1"
             req = urllib.request.Request(ddg_url, headers={"User-Agent": "Mozilla/5.0 OmegaNexus/2.0"})
             with urllib.request.urlopen(req, timeout=4) as r:
                 data = json.loads(r.read().decode("utf-8"))
                 if data.get("AbstractText"):
-                    results.insert(0, {
+                    ddg_obj = {
                         "title": data.get("Heading") or clean_q,
                         "snippet": data.get("AbstractText"),
                         "source": data.get("AbstractSource") or "DuckDuckGo Knowledge Graph",
-                        "url": data.get("AbstractURL") or f"https://www.google.com/search?q={urllib.parse.quote(clean_q)}"
-                    })
-                for topic in data.get("RelatedTopics", [])[:3]:
-                    if isinstance(topic, dict) and "Text" in topic:
-                        results.append({
-                            "title": topic.get("Text", "").split(" - ")[0],
-                            "snippet": topic.get("Text", ""),
-                            "source": "Web Index",
-                            "url": topic.get("FirstURL", f"https://www.google.com/search?q={urllib.parse.quote(clean_q)}")
-                        })
+                        "url": data.get("AbstractURL") or f"https://www.google.com/search?q={urllib.parse.quote(clean_q)}",
+                        "category": "wiki"
+                    }
+                    results_all.insert(0, ddg_obj)
+                    key_facts.insert(0, data.get("AbstractText"))
         except Exception as e:
             logger.warning("karen.ddg_search_error", error=str(e))
 
-        return results
+        return {
+            "all": results_all,
+            "news": news_items,
+            "wiki": wiki_items,
+            "code": code_items,
+            "key_facts": key_facts
+        }
 
     # ──────────────────────────────────────────────────────────────────────────
     # CAPABILITY 1: NATURAL CONVERSATIONS (UNIVERSAL INTELLIGENCE)
@@ -275,17 +337,18 @@ class KarenBrainEngine:
             response, speech = KNOWLEDGE_INDEX[q_lower]
         else:
             # 3. Dynamic Real-Time Live Web Search & Knowledge Synthesis
-            live_results = self._fetch_live_web_intelligence(query)
+            stream_data = self._fetch_live_web_intelligence(query)
+            live_results = stream_data.get("all", [])
             if live_results:
                 intent = "WEB_SYNTHESIS"
                 top_facts = []
-                for r in live_results[:3]:
+                for r in live_results[:4]:
                     top_facts.append(f"• **{r['title']}**: {r['snippet']}")
                 
                 response = (
-                    f"**Intelligence Summary for '{query}'**:\n\n"
+                    f"**Verified Intelligence Dossier for '{query}'**:\n\n"
                     + "\n\n".join(top_facts) +
-                    f"\n\n*Verified sources: Wikipedia Knowledge Base, Google News, and Web Index.*"
+                    f"\n\n*Verified Sources: Wikipedia Knowledge Base, Google News Real-Time, GitHub Open Source, and Global Web Index.*"
                 )
                 first_fact = live_results[0]['snippet'].split(". ")[0] if live_results[0]['snippet'] else query
                 speech = f"According to verified intelligence for {query}: {first_fact}."
@@ -310,16 +373,20 @@ class KarenBrainEngine:
         }
 
     # ──────────────────────────────────────────────────────────────────────────
-    # CAPABILITY 2: UNIVERSAL REAL WEB SEARCH
+    # CAPABILITY 2: UNIVERSAL REAL WEB SEARCH (DEEP RESEARCH DOSSIER)
     # ──────────────────────────────────────────────────────────────────────────
     async def execute_web_search(self, query: str) -> Dict[str, Any]:
-        """Executes live global web search on ANY user query and synthesizes verified intelligence."""
+        """Executes live global 5-stream web search on ANY user query and synthesizes a deep research dossier."""
         start_time = time.perf_counter()
         clean_q = query.strip()
         if not clean_q:
             clean_q = "Artificial Intelligence breakthroughs latest news"
 
-        search_results = self._fetch_live_web_intelligence(clean_q)
+        stream_data = self._fetch_live_web_intelligence(clean_q)
+        search_results = stream_data.get("all", [])
+        news_items = stream_data.get("news", [])
+        wiki_items = stream_data.get("wiki", [])
+        code_items = stream_data.get("code", [])
 
         # If live search is empty, provide structured real search engine fallback links
         if not search_results:
@@ -328,26 +395,36 @@ class KarenBrainEngine:
                     "title": f"Google Web Search: {clean_q}",
                     "snippet": f"Execute real-time web search for '{clean_q}' across global indexed pages and technical documentation.",
                     "source": "Google Search Index",
-                    "url": f"https://www.google.com/search?q={urllib.parse.quote(clean_q)}"
+                    "url": f"https://www.google.com/search?q={urllib.parse.quote(clean_q)}",
+                    "category": "web"
                 },
                 {
                     "title": f"Wikipedia Knowledge Base: {clean_q}",
                     "snippet": f"Explore verified encyclopedic entries, citations, and background articles for '{clean_q}'.",
                     "source": "Wikipedia",
-                    "url": f"https://en.wikipedia.org/wiki/Special:Search?search={urllib.parse.quote(clean_q)}"
+                    "url": f"https://en.wikipedia.org/wiki/Special:Search?search={urllib.parse.quote(clean_q)}",
+                    "category": "wiki"
                 },
                 {
                     "title": f"Google News Live Coverage: {clean_q}",
                     "snippet": f"Read latest news reports, verified journalism, and active press releases on '{clean_q}'.",
                     "source": "Google News",
-                    "url": f"https://news.google.com/search?q={urllib.parse.quote(clean_q)}"
+                    "url": f"https://news.google.com/search?q={urllib.parse.quote(clean_q)}",
+                    "category": "news"
                 }
             ]
 
         top_title = search_results[0]['title'] if search_results else clean_q
         top_snippet = search_results[0]['snippet'] if search_results else ""
-        summary = f"Web Search for '{clean_q}' complete. Retrieved {len(search_results)} live verified sources. Top finding: {top_title} — {top_snippet[:140]}..."
+        summary = f"Multi-Stream Web Search for '{clean_q}' complete. Retrieved {len(search_results)} live verified sources across Wikipedia, Google News, GitHub, and Web Index. Top finding: {top_title} — {top_snippet[:150]}..."
         speech = f"Web search for {clean_q} complete. Top result: {top_title}."
+
+        related_queries = [
+            f"Latest developments in {clean_q}",
+            f"{clean_q} official documentation and guides",
+            f"Technical architecture and analysis of {clean_q}",
+            f"{clean_q} news and industry impact"
+        ]
 
         elapsed_ms = round((time.perf_counter() - start_time) * 1000, 2)
         self.auto_learner.record_interaction(clean_q, "WEB_SEARCH", summary, elapsed_ms)
@@ -358,8 +435,12 @@ class KarenBrainEngine:
             "query": clean_q,
             "results_count": len(search_results),
             "results": search_results,
+            "news": news_items,
+            "wiki": wiki_items,
+            "code": code_items,
             "summary": summary,
             "speech": speech,
+            "related_queries": related_queries,
             "latency_ms": elapsed_ms
         }
 

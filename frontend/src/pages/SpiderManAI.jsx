@@ -8,7 +8,7 @@ import {
   X, Eye, Compass, Send, Activity, ArrowLeft, Camera,
   Upload, Scan, Smile, UserCheck, UserX, PlusCircle, Trash2, HeartHandshake, Zap,
   Brain, Cpu, Clock, Calendar, CheckSquare, Layers, HelpCircle, Code, Copy, Globe,
-  Battery, BatteryCharging, Wifi, WifiOff, HardDrive, Laptop
+  Battery, BatteryCharging, Wifi, WifiOff, HardDrive, Laptop, Volume2
 } from "lucide-react";
 import { http } from "../lib/api";
 import { useDeviceWeather } from "../lib/locationWeather";
@@ -435,6 +435,11 @@ export default function SpiderManAI() {
   // Specific Capability Execution States
   const [webSearchQuery, setWebSearchQuery] = useState("Spider-Man MCU tech developments");
   const [webSearchResults, setWebSearchResults] = useState([]);
+  const [webSearchNews, setWebSearchNews] = useState([]);
+  const [webSearchWiki, setWebSearchWiki] = useState([]);
+  const [webSearchCode, setWebSearchCode] = useState([]);
+  const [webSearchRelated, setWebSearchRelated] = useState([]);
+  const [webSearchCategory, setWebSearchCategory] = useState("all");
   const [webSearchLoading, setWebSearchLoading] = useState(false);
 
   const [codeAssistantPrompt, setCodeAssistantPrompt] = useState("Optimize nano-weave power routing in Python");
@@ -780,6 +785,10 @@ export default function SpiderManAI() {
         setModalSearchInput(queryToSearch);
         const res = await executeKarenCapability("WEB_SEARCH", queryToSearch);
         setWebSearchResults(res.results || []);
+        setWebSearchNews(res.news || []);
+        setWebSearchWiki(res.wiki || []);
+        setWebSearchCode(res.code || []);
+        setWebSearchRelated(res.related_queries || []);
         setAiResponse(res.summary);
         setVoiceQuery(`Web Search: "${queryToSearch}"`);
         speakKaren(res.speech || `Search complete. Found verified intelligence for ${queryToSearch}.`);
@@ -2745,14 +2754,14 @@ export default function SpiderManAI() {
               </div>
             )}
 
-            {/* 1. UNIVERSAL REAL WEB SEARCH & LIVE INTELLIGENCE MODAL */}
+            {/* 1. UNIVERSAL REAL WEB SEARCH & DEEP INTELLIGENCE DOSSIER MODAL */}
             {modalMode === "WEB_SEARCH" && (
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {/* Search Input Bar */}
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    const q = (modalSearchInput.trim() || webSearchQuery.trim() || "Latest Artificial Intelligence and technology breakthroughs");
+                    const q = (modalSearchInput.trim() || webSearchQuery.trim() || "Latest Artificial Intelligence breakthroughs");
                     handleTriggerCommand("WEB_SEARCH", q);
                   }}
                   style={{ display: "flex", gap: 8 }}
@@ -2764,7 +2773,7 @@ export default function SpiderManAI() {
                       setModalSearchInput(e.target.value);
                       setWebSearchQuery(e.target.value);
                     }}
-                    placeholder="Search Google, Wikipedia, GitHub, or any topic (e.g. Artificial Intelligence, React 19, Space, News)..."
+                    placeholder="Search any topic, acronym, technology, news, or query (e.g. SIH, React 19, Space, AI)..."
                     style={{
                       flex: 1, padding: "11px 16px", borderRadius: 6,
                       background: "rgba(3, 7, 18, 0.95)", border: "1px solid rgba(0, 245, 255, 0.4)",
@@ -2780,33 +2789,33 @@ export default function SpiderManAI() {
                       fontFamily: "monospace", cursor: "pointer", display: "flex", alignItems: "center", gap: 6
                     }}
                   >
-                    <Search size={14} /> {webSearchLoading ? "SEARCHING..." : "AI SEARCH"}
+                    <Search size={14} /> {webSearchLoading ? "RESEARCHING..." : "LIVE SEARCH"}
                   </button>
                   <button
                     type="button"
                     onClick={() => {
                       const q = modalSearchInput.trim() || "Latest Artificial Intelligence breakthroughs";
-                      window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank", "noopener,noreferrer");
+                      speakKaren(`Here is the intelligence summary for ${q}: ${aiResponse.slice(0, 160)}`);
                     }}
                     style={{
                       padding: "11px 14px", borderRadius: 6, background: "rgba(255, 255, 255, 0.05)",
-                      border: "1px solid rgba(255, 255, 255, 0.2)", color: "#ffffff", fontSize: 11, fontWeight: 700,
+                      border: "1px solid rgba(0, 255, 136, 0.3)", color: "#00FF88", fontSize: 11, fontWeight: 700,
                       fontFamily: "monospace", cursor: "pointer", display: "flex", alignItems: "center", gap: 4
                     }}
                   >
-                    GOOGLE ↗
+                    <Volume2 size={13} /> BRIEFING
                   </button>
                 </form>
 
-                {/* 6 Real Search Engines Launchers Grid */}
+                {/* 6 Real Search Engine Direct Launchers Grid */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
                   {[
                     { name: "Google Web", url: q => `https://www.google.com/search?q=${encodeURIComponent(q)}`, color: "#00f5ff" },
                     { name: "YouTube", url: q => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`, color: "#ff2a4d" },
                     { name: "Google News", url: q => `https://news.google.com/search?q=${encodeURIComponent(q)}`, color: "#34d399" },
-                    { name: "Google Maps", url: q => `https://www.google.com/maps/search/${encodeURIComponent(q || "Current Location")}`, color: "#fb923c" },
+                    { name: "Google Scholar", url: q => `https://scholar.google.com/scholar?q=${encodeURIComponent(q)}`, color: "#fb923c" },
                     { name: "GitHub Search", url: q => `https://github.com/search?q=${encodeURIComponent(q)}`, color: "#c084fc" },
-                    { name: "Wikipedia", url: q => `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(q || "Artificial Intelligence")}`, color: "#e2e8f0" }
+                    { name: "Wikipedia", url: q => `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(q)}`, color: "#e2e8f0" }
                   ].map(engine => (
                     <button
                       key={engine.name}
@@ -2817,14 +2826,13 @@ export default function SpiderManAI() {
                         speakKaren(`Opening ${engine.name} for ${q}.`);
                       }}
                       style={{
-                        padding: "8px 10px", borderRadius: 6, background: "rgba(15,23,42,0.85)",
+                        padding: "7px 10px", borderRadius: 6, background: "rgba(15,23,42,0.85)",
                         border: `1px solid ${engine.color}40`, color: "#ffffff",
-                        fontSize: 11, fontWeight: 700, cursor: "pointer",
+                        fontSize: 10.5, fontWeight: 700, cursor: "pointer",
                         display: "flex", alignItems: "center", justifyContent: "space-between"
                       }}
                       onMouseEnter={e => { e.currentTarget.style.borderColor = engine.color; e.currentTarget.style.background = `${engine.color}20`; }}
                       onMouseLeave={e => { e.currentTarget.style.borderColor = `${engine.color}40`; e.currentTarget.style.background = "rgba(15,23,42,0.85)"; }}
-                      title={`Search ${engine.name} for your query`}
                     >
                       <span>{engine.name}</span>
                       <span style={{ color: engine.color, fontSize: 10 }}>↗</span>
@@ -2832,75 +2840,110 @@ export default function SpiderManAI() {
                   ))}
                 </div>
 
-                {/* Popular Universal Search Directives */}
-                <div>
-                  <div style={{ fontSize: 10, color: "rgba(148,163,184,0.7)", fontFamily: "monospace", marginBottom: 6 }}>
-                    POPULAR TOPICS & DIRECTIVES (CLICK TO SEARCH LIVE)
-                  </div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                    {[
-                      "Artificial Intelligence & LLMs",
-                      "Fullstack React & Python Development",
-                      "Global Financial & Tech Markets",
-                      "Quantum Computing Breakthroughs",
-                      "Space Exploration & Astronomy",
-                      "Latest World News & Headlines",
-                      "Marvel & Spider-Man Universe"
-                    ].map(tag => (
-                      <button
-                        key={tag}
-                        onClick={() => {
-                          setModalSearchInput(tag);
-                          setWebSearchQuery(tag);
-                          handleTriggerCommand("WEB_SEARCH", tag);
-                        }}
-                        style={{
-                          padding: "5px 12px", borderRadius: 14, background: "rgba(0,245,255,0.08)",
-                          border: "1px solid rgba(0,245,255,0.25)", color: "rgba(226,232,240,0.9)",
-                          fontSize: 10.5, cursor: "pointer", fontFamily: "monospace"
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = "#00f5ff"; e.currentTarget.style.background = "rgba(0,245,255,0.2)"; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(0,245,255,0.25)"; e.currentTarget.style.background = "rgba(0,245,255,0.08)"; }}
-                      >
-                        🔍 {tag}
-                      </button>
-                    ))}
-                  </div>
+                {/* Multi-Stream Category Filter Tabs */}
+                <div style={{ display: "flex", gap: 6, borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 6 }}>
+                  {[
+                    { id: "all", label: `🌐 ALL SOURCES (${webSearchResults.length})` },
+                    { id: "news", label: `📰 LIVE NEWS (${webSearchNews.length})` },
+                    { id: "wiki", label: `📚 ENCYCLOPEDIA (${webSearchWiki.length})` },
+                    { id: "code", label: `💻 GITHUB & CODE (${webSearchCode.length})` }
+                  ].map(tab => (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setWebSearchCategory(tab.id)}
+                      style={{
+                        padding: "5px 10px", borderRadius: 4,
+                        background: webSearchCategory === tab.id ? "rgba(0,245,255,0.2)" : "transparent",
+                        border: webSearchCategory === tab.id ? "1px solid #00f5ff" : "1px solid transparent",
+                        color: webSearchCategory === tab.id ? "#00f5ff" : "rgba(148,163,184,0.8)",
+                        fontSize: 10, fontWeight: 800, cursor: "pointer", fontFamily: "monospace"
+                      }}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
                 </div>
 
-                {/* In-App Live Intelligence Results */}
-                {webSearchResults && webSearchResults.length > 0 && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <div style={{ fontSize: 10, fontWeight: 800, color: "#00f5ff", fontFamily: "monospace" }}>
-                      VERIFIED WEB INTELLIGENCE ({webSearchResults.length} SOURCES)
-                    </div>
-                    {webSearchResults.map((res, i) => (
-                      <div key={i} style={{ background: "rgba(15,23,42,0.85)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, padding: "10px 12px" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <div style={{ fontSize: 13, fontWeight: 800, color: "#00f5ff" }}>{res.title}</div>
-                          <span style={{ fontSize: 9, color: "rgba(148,163,184,0.7)", fontFamily: "monospace" }}>{res.source}</span>
-                        </div>
-                        <div style={{ fontSize: 11, color: "#cbd5e1", marginTop: 4, lineHeight: 1.4 }}>{res.snippet}</div>
-                        {res.url && (
-                          <a href={res.url} target="_blank" rel="noreferrer" style={{ fontSize: 9.5, color: "#38bdf8", marginTop: 6, display: "inline-block", textDecoration: "none" }}>
-                            🔗 {res.url} ↗
-                          </a>
-                        )}
+                {/* In-App Live Intelligence Results Display */}
+                {(() => {
+                  let displayList = webSearchResults;
+                  if (webSearchCategory === "news") displayList = webSearchNews;
+                  else if (webSearchCategory === "wiki") displayList = webSearchWiki;
+                  else if (webSearchCategory === "code") displayList = webSearchCode;
+
+                  if (!displayList || displayList.length === 0) {
+                    return (
+                      <div style={{ padding: 16, textAlign: "center", color: "rgba(148,163,184,0.7)", fontFamily: "monospace", fontSize: 11 }}>
+                        No items in this category. Click LIVE SEARCH or switch tabs above.
                       </div>
-                    ))}
+                    );
+                  }
+
+                  return (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 320, overflowY: "auto" }}>
+                      {displayList.map((res, i) => (
+                        <div key={i} style={{ background: "rgba(15,23,42,0.9)", border: "1px solid rgba(0,245,255,0.25)", borderRadius: 6, padding: "10px 12px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                            <div style={{ fontSize: 12.5, fontWeight: 800, color: "#00f5ff" }}>{res.title}</div>
+                            <span style={{ fontSize: 9, color: "#34d399", background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.3)", borderRadius: 4, padding: "2px 6px", fontFamily: "monospace", flexShrink: 0 }}>
+                              {res.source}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: 11, color: "#cbd5e1", marginTop: 4, lineHeight: 1.45 }}>{res.snippet}</div>
+                          {res.url && (
+                            <div style={{ marginTop: 6, display: "flex", justifyContent: "flex-end" }}>
+                              <a
+                                href={res.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{
+                                  fontSize: 10, color: "#38bdf8", textDecoration: "none",
+                                  padding: "3px 8px", background: "rgba(56,189,248,0.1)",
+                                  border: "1px solid rgba(56,189,248,0.3)", borderRadius: 4,
+                                  display: "inline-flex", alignItems: "center", gap: 4
+                                }}
+                              >
+                                OPEN SOURCE ↗
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+
+                {/* Suggested Related Exploration Directives */}
+                {webSearchRelated && webSearchRelated.length > 0 && (
+                  <div>
+                    <div style={{ fontSize: 9.5, color: "rgba(148,163,184,0.7)", fontFamily: "monospace", marginBottom: 4 }}>
+                      SUGGESTED DEEP-DIVE EXPLORATION DIRECTIVES
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {webSearchRelated.map((rq, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => {
+                            setModalSearchInput(rq);
+                            setWebSearchQuery(rq);
+                            handleTriggerCommand("WEB_SEARCH", rq);
+                          }}
+                          style={{
+                            padding: "4px 10px", borderRadius: 12, background: "rgba(0,245,255,0.06)",
+                            border: "1px solid rgba(0,245,255,0.2)", color: "rgba(226,232,240,0.85)",
+                            fontSize: 9.5, cursor: "pointer", fontFamily: "monospace"
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.borderColor = "#00f5ff"; e.currentTarget.style.background = "rgba(0,245,255,0.18)"; }}
+                          onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(0,245,255,0.2)"; e.currentTarget.style.background = "rgba(0,245,255,0.06)"; }}
+                        >
+                          🔍 {rq}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
-
-                {/* Search Execution Status */}
-                <div style={{ padding: 12, borderRadius: 6, background: "rgba(15,23,42,0.8)", border: "1px solid rgba(0,245,255,0.25)" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                    <div style={{ fontSize: 12, fontWeight: 800, color: "#00f5ff" }}>Live Search Engine Telemetry</div>
-                    <span style={{ fontSize: 9, color: "#34d399", fontFamily: "monospace" }}>GLOBAL WEB REAL-TIME ACCESS</span>
-                  </div>
-                  <div style={{ fontSize: 11.5, color: "rgba(226,232,240,0.95)", lineHeight: 1.45 }}>
-                    {aiResponse}
-                  </div>
-                </div>
               </div>
             )}
 
