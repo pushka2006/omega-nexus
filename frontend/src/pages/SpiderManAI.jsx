@@ -3661,7 +3661,8 @@ export default function SpiderManAI() {
                         border: `1px solid ${msg.sender === "user" ? "#ff2a4d" : "#00f5ff"}`,
                         color: "#fff",
                         fontSize: 12,
-                        lineHeight: 1.4
+                        lineHeight: 1.45,
+                        whiteSpace: "pre-wrap"
                       }}>
                         <div style={{ fontSize: 9, color: msg.sender === "user" ? "#ff8da1" : "#38bdf8", fontFamily: "monospace", marginBottom: 2 }}>
                           {msg.sender === "user" ? "PETER PARKER" : "KAREN AI"}
