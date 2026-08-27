@@ -702,20 +702,25 @@ export default function SpiderManAI() {
     if (resolvedType === "GENERAL" || !resolvedType) {
       if (lower.includes("weather") || lower.includes("temperature") || lower.includes("forecast") || lower.includes("climate") || lower.includes("rain") || lower.includes("hot") || lower.includes("cold") || lower.includes("where am i") || lower.includes("location") || lower.includes("gps")) {
         resolvedType = "WEATHER_LOCATION";
-      } else if (lower.includes("search") || lower.includes("stark") || lower.includes("web") || lower.includes("google")) {
+      } else if (lower.includes("search") || lower.includes("stark web") || lower.includes("google") || lower.startsWith("search") || lower.includes("find online") || lower.includes("look up")) {
         resolvedType = "WEB_SEARCH";
-      } else if (lower.includes("data") || lower.includes("crime") || lower.includes("analyze") || lower.includes("analysis")) {
+      } else if (lower.includes("data") || lower.includes("statistics") || lower.includes("analytics") || lower.includes("chart") || lower.includes("variance")) {
         resolvedType = "DATA_ANALYSIS";
-      } else if (lower.includes("threat") || lower.includes("scan") || lower.includes("radar") || lower.includes("perimeter") || lower.includes("detect")) {
+      } else if (lower.includes("threat map") || lower.includes("scan perimeter for threats") || lower.includes("scan threat")) {
         resolvedType = "SCAN_DETECT";
-      } else if (lower.includes("code") || lower.includes("python") || lower.includes("program") || lower.includes("algorithm") || lower.includes("debug")) {
+      } else if (lower.includes("code") || lower.includes("python") || lower.includes("program") || lower.includes("algorithm") || lower.includes("debug") || lower.includes("function") || lower.includes("react")) {
         resolvedType = "CODE_ASSISTANT";
-      } else if (lower.includes("image") || lower.includes("camera") || lower.includes("drone") || lower.includes("identify") || lower.includes("object")) {
+      } else if (lower.includes("camera") || lower.includes("identify face") || lower.includes("look at this") || lower.includes("optical scanner")) {
         resolvedType = "IMAGE_RECOGNITION";
-      } else if (lower.includes("suit") || lower.includes("status") || lower.includes("armor") || lower.includes("telemetry") || lower.includes("power")) {
+      } else if (lower.includes("remind") || lower.includes("schedule") || lower.includes("alarm") || lower.includes("calendar")) {
+        resolvedType = "SMART_REMINDERS";
+      } else if (lower.includes("suit status") || lower.includes("armor integrity") || lower.includes("power level")) {
         resolvedType = "SUIT_STATUS";
-      } else if (lower.includes("gadget") || lower.includes("weapon") || lower.includes("web shooter")) {
+      } else if (lower.includes("gadget") || lower.includes("weapon arsenal") || lower.includes("web shooter")) {
         resolvedType = "GADGETS";
+      } else {
+        // Universal Natural Conversation with Karen AI Central Brain Engine!
+        resolvedType = "NATURAL_CONVERSATION";
       }
     }
 
@@ -906,11 +911,10 @@ export default function SpiderManAI() {
 
     // Start listening
     setIsListening(true);
-    setVoiceQuery("Listening for Peter's voice... Speak your directive now");
-    speakKaren("I'm listening, Peter.");
+    setVoiceQuery("Listening... Speak your directive now");
+    speakKaren("I'm listening, Peter. Speak now.");
 
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognitionStarted = false;
 
     if (SpeechRec) {
       try {
@@ -931,45 +935,47 @@ export default function SpiderManAI() {
 
           const isFinal = results.some(r => r.isFinal);
           if (isFinal && transcript.trim()) {
+            rec.stop();
             handleTriggerCommand("GENERAL", transcript.trim());
           }
         };
 
         rec.onerror = (err) => {
           console.warn("[Karen Voice] SpeechRecognition notice:", err.error);
-          // If no speech heard or permission issue, trigger default directive so experience never fails
-          if (!fallbackTimerRef.current) {
-            fallbackTimerRef.current = setTimeout(() => {
-              handleTriggerCommand("GENERAL", "Run system diagnostics and check surrounding threats");
-            }, 1800);
+          setIsListening(false);
+          if (fallbackTimerRef.current) {
+            clearTimeout(fallbackTimerRef.current);
+            fallbackTimerRef.current = null;
+          }
+          if (err.error !== "no-speech") {
+            setVoiceQuery("Voice standby. Click microphone to speak again.");
           }
         };
 
         rec.onend = () => {
-          if (!recognitionStarted) {
-            setIsListening(false);
-          }
+          setIsListening(false);
         };
 
         rec.start();
-        recognitionStarted = true;
 
-        // Safety fallback timer if no words received in 4.5 seconds
+        // If no speech detected in 6 seconds, gently return to standby without forcing any threat scan
         fallbackTimerRef.current = setTimeout(() => {
-          handleTriggerCommand("GENERAL", "Run system diagnostics and scan Queens perimeter");
-        }, 4500);
+          if (isListening) {
+            setIsListening(false);
+            setVoiceQuery("Standing by for your directive.");
+          }
+        }, 6000);
 
       } catch (err) {
-        console.warn("[Karen Voice] Failed to start native SpeechRecognition, running fallback directive:", err);
-        fallbackTimerRef.current = setTimeout(() => {
-          handleTriggerCommand("GENERAL", "Check all suit telemetry and weapon systems");
-        }, 1800);
+        console.warn("[Karen Voice] SpeechRecognition init issue:", err);
+        setIsListening(false);
+        setVoiceQuery("Standing by. Type or tap to speak.");
       }
     } else {
-      // Browser doesn't support Web Speech API - provide seamless simulated voice directive
-      fallbackTimerRef.current = setTimeout(() => {
-        handleTriggerCommand("GENERAL", "Run Spider-Suit diagnostic sweep and scan perimeter threats");
-      }, 1800);
+      // Browser doesn't support Web Speech API - open Natural Conversation modal
+      setIsListening(false);
+      setModalMode("NATURAL_CONVERSATION");
+      speakKaren("Voice input is not supported in this browser. You can type directly to me.");
     }
   };
 
